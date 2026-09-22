@@ -121,6 +121,24 @@
       }
     };
 
+    // Función segura para buscar la imagen
+    function obtenerNombreImagen(dia, isWarmup, wIdx, bIdx) {
+      const prefijos = {
+        lunes: "Lunes", martes: "Martes", miercoles: "Miercoles", jueves: "Jueves", viernes: "Viernes"
+      };
+      const prefijo = prefijos[dia];
+      
+      if (isWarmup) {
+        return wIdx < 3 ? (prefijo + " 1.png") : (prefijo + " 2.png");
+      }
+      if (bIdx === 1) return (prefijo + " 3.png");
+      if (bIdx === 3) return (prefijo + " 4.png");
+      if (bIdx === 5) return (prefijo + " 5.png");
+      if (bIdx === 7) return (prefijo + " 6.png");
+      if (bIdx === 9) return (prefijo + " 7.png");
+      return "";
+    }
+
     function App() {
       const [view, setView] = useState('home');
       const [selectedDay, setSelectedDay] = useState('lunes');
@@ -354,12 +372,10 @@
 
       let title = "";
       let subtitle = "";
-      let imgNumber = "";
 
       if (isWarmup) {
         title = WARMUP_EXERCISES[warmupIdx].name;
         subtitle = WARMUP_EXERCISES[warmupIdx].cue;
-        imgNumber = warmupIdx < 3 ? "1" : "2"; 
       } else if (isRest) {
         title = "Descanso / Transición";
         subtitle = "Respira y prepárate para el siguiente bloque.";
@@ -370,21 +386,12 @@
         const isA = subPhase % 2 === 0;
         title = isA ? currentBlock.exA : currentBlock.exB;
         subtitle = isA ? currentBlock.cueA : currentBlock.cueB;
-        
-        if (blockIdx === 1) imgNumber = "3";
-        else if (blockIdx === 3) imgNumber = "4";
-        else if (blockIdx === 5) imgNumber = "5";
-        else if (blockIdx === 7) imgNumber = "6";
-        else if (blockIdx === 9) imgNumber = "7";
       }
 
-      // -------------------------------------------------------------
-      // LA MAGIA ESTÁ AQUÍ: Pone la inicial en mayúscula para coincidir
-      // -------------------------------------------------------------
-      const capDay = selectedDay === 'miercoles' ? 'Miercoles' : (selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1));
-      const mediaSrc = imgNumber ? (capDay + "%20" + imgNumber + ".png") : "";
+      // Llama a la función segura
+      const mediaSrc = obtenerNombreImagen(selectedDay, isWarmup, warmupIdx, blockIdx);
       
-      const lastRecorded = weightHistory[title]?.lastWeight;
+      const lastRecorded = weightHistory[title] ? weightHistory[title].lastWeight : null;
 
       return (
         <div className="flex flex-col min-h-[92vh] justify-between">
@@ -400,4 +407,155 @@
             <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
               isWarmup ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
               isRest ? 'bg-amber-500/20 text-amber-300' :
-              currentBlock.type === 'cardio' ? '
+              currentBlock.type === 'cardio' ? 'bg-emerald-500/20 text-emerald-300' :
+              'bg-blue-500/20 text-blue-300'
+            }`}>
+              {isWarmup ? 'Movilidad y Activación' : isRest ? 'Transición' : currentBlock.type}
+            </span>
+
+            {/* AQUI SE CARGA LA IMAGEN CON EL NOMBRE EXACTO */}
+            {mediaSrc ? (
+              <div className="w-full max-w-[16rem] h-32 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-lg mx-auto flex items-center justify-center my-2 p-1">
+                <img 
+                  src={mediaSrc} 
+                  alt={title} 
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              </div>
+            ) : null}
+
+            <div className="min-h-[3rem] px-2 max-w-sm">
+              <h2 className="text-xl font-black text-white leading-tight">{title}</h2>
+              <p className="text-slate-400 text-xs mt-1">{subtitle}</p>
+            </div>
+
+            <div className="text-7xl font-mono font-black text-white tracking-tighter pb-2">
+              {formatTime(timeLeft)}
+            </div>
+
+            {!isWarmup && !isRest && currentBlock.type === 'fuerza' && (
+              <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 w-full max-w-xs text-left space-y-2 mt-2">
+                <div className="flex justify-between text-xs text-slate-400">
+                  <span>Último registrado:</span>
+                  <span className="font-bold text-slate-200">{lastRecorded ? `${lastRecorded} kg` : 'Sin datos'}</span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    placeholder="Hoy (kg)"
+                    value={currentWeightInput}
+                    onChange={(e) => setCurrentWeightInput(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+                  />
+                  <button
+                    onClick={() => {
+                      if (currentWeightInput) {
+                        onSaveWeight(title, currentWeightInput);
+                        setCurrentWeightInput('');
+                      }
+                    }}
+                    className="bg-blue-600 px-3 py-1.5 rounded-lg text-xs font-bold text-white shrink-0 active:scale-95"
+                  >
+                    Guardar
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 mt-2">
+            <button
+              onClick={() => {
+                if (isWarmup) setTimeLeft(60);
+                else if (isRest) setTimeLeft(60);
+                else if (currentBlock.type === 'cardio') setTimeLeft(240);
+                else setTimeLeft(60);
+              }}
+              className="h-16 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col items-center justify-center text-slate-300 active:bg-slate-800"
+            >
+              <span className="text-base font-bold">↺</span>
+              <span className="text-[10px] uppercase font-bold tracking-wider mt-1">Reiniciar</span>
+            </button>
+
+            <button
+              onClick={() => setRunning(!running)}
+              className={`h-16 rounded-2xl flex flex-col items-center justify-center font-black uppercase text-xs tracking-wider shadow-lg transition ${
+                running ? 'bg-amber-600 text-white' : 'bg-emerald-600 text-white'
+              }`}
+            >
+              <span className="text-lg">{running ? '❚❚' : '▶'}</span>
+              <span className="text-[10px] mt-0.5">{running ? 'Pausa' : 'Iniciar'}</span>
+            </button>
+
+            <button
+              onClick={nextStep}
+              className="h-16 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col items-center justify-center text-slate-300 active:bg-slate-800"
+            >
+              <span className="text-base font-bold">⏭</span>
+              <span className="text-[10px] uppercase font-bold tracking-wider mt-1">Saltar</span>
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    function MetricsView({ metrics, onAddMetric, onBack }) {
+      const [form, setForm] = useState({ weight: '', cintura: '', cadera: '', brazo: '', muslo: '' });
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!form.weight && !form.cintura) return;
+        onAddMetric(form);
+        setForm({ weight: '', cintura: '', cadera: '', brazo: '', muslo: '' });
+      };
+
+      return (
+        <div className="space-y-4 pt-2">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold">Medidas Corporales</h2>
+            <button onClick={onBack} className="text-xs text-blue-400 font-semibold">← Volver</button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="bg-slate-900 p-4 border border-slate-800 rounded-xl space-y-3">
+            <span className="text-xs font-bold text-slate-400 uppercase">Nuevo Registro</span>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <input type="number" step="0.1" placeholder="Peso (kg)" value={form.weight} onChange={e => setForm({...form, weight: e.target.value})} className="bg-slate-950 p-2 border border-slate-700 rounded-lg text-white" />
+              <input type="number" step="0.1" placeholder="Cintura (cm)" value={form.cintura} onChange={e => setForm({...form, cintura: e.target.value})} className="bg-slate-950 p-2 border border-slate-700 rounded-lg text-white" />
+              <input type="number" step="0.1" placeholder="Cadera (cm)" value={form.cadera} onChange={e => setForm({...form, cadera: e.target.value})} className="bg-slate-950 p-2 border border-slate-700 rounded-lg text-white" />
+              <input type="number" step="0.1" placeholder="Brazo (cm)" value={form.brazo} onChange={e => setForm({...form, brazo: e.target.value})} className="bg-slate-950 p-2 border border-slate-700 rounded-lg text-white" />
+              <input type="number" step="0.1" placeholder="Muslo (cm)" value={form.muslo} onChange={e => setForm({...form, muslo: e.target.value})} className="bg-slate-950 p-2 border border-slate-700 rounded-lg text-white col-span-2" />
+            </div>
+            <button type="submit" className="w-full bg-emerald-600 text-white font-bold p-2.5 rounded-lg text-xs uppercase">
+              Guardar Medidas
+            </button>
+          </form>
+
+          <div className="space-y-2">
+            <span className="text-xs font-bold text-slate-400 uppercase">Historial</span>
+            <div className="space-y-2">
+              {metrics.length === 0 ? (
+                <div className="text-xs text-slate-500 text-center py-4">No hay medidas registradas</div>
+              ) : (
+                metrics.map(m => (
+                  <div key={m.id} className="bg-slate-900 border border-slate-800 p-3 rounded-xl text-xs space-y-1">
+                    <div className="text-slate-400 font-bold">{m.date}</div>
+                    <div className="grid grid-cols-3 gap-1 text-slate-300">
+                      {m.weight && <span>Peso: <b>{m.weight} kg</b></span>}
+                      {m.cintura && <span>Cint: <b>{m.cintura} cm</b></span>}
+                      {m.cadera && <span>Cad: <b>{m.cadera} cm</b></span>}
+                      {m.brazo && <span>Brazo: <b>{m.brazo} cm</b></span>}
+                      {m.muslo && <span>Muslo: <b>{m.muslo} cm</b></span>}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
