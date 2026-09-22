@@ -359,7 +359,7 @@
       if (isWarmup) {
         title = WARMUP_EXERCISES[warmupIdx].name;
         subtitle = WARMUP_EXERCISES[warmupIdx].cue;
-        imgNumber = warmupIdx < 3 ? "1" : "2"; // Panel 1 o 2
+        imgNumber = warmupIdx < 3 ? "1" : "2"; 
       } else if (isRest) {
         title = "Descanso / Transición";
         subtitle = "Respira y prepárate para el siguiente bloque.";
@@ -371,7 +371,6 @@
         title = isA ? currentBlock.exA : currentBlock.exB;
         subtitle = isA ? currentBlock.cueA : currentBlock.cueB;
         
-        // Asignación de imagen según el bloque de fuerza
         if (blockIdx === 1) imgNumber = "3";
         else if (blockIdx === 3) imgNumber = "4";
         else if (blockIdx === 5) imgNumber = "5";
@@ -379,8 +378,12 @@
         else if (blockIdx === 9) imgNumber = "7";
       }
 
-      // CAMBIO A PNG AQUÍ
-      const mediaSrc = imgNumber ? `${selectedDay} ${imgNumber}.png` : "";
+      // -------------------------------------------------------------
+      // LA MAGIA ESTÁ AQUÍ: Pone la inicial en mayúscula para coincidir
+      // -------------------------------------------------------------
+      const capDay = selectedDay === 'miercoles' ? 'Miercoles' : (selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1));
+      const mediaSrc = imgNumber ? (capDay + "%20" + imgNumber + ".png") : "";
+      
       const lastRecorded = weightHistory[title]?.lastWeight;
 
       return (
@@ -397,10 +400,4 @@
             <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
               isWarmup ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
               isRest ? 'bg-amber-500/20 text-amber-300' :
-              currentBlock.type === 'cardio' ? 'bg-emerald-500/20 text-emerald-300' :
-              'bg-blue-500/20 text-blue-300'
-            }`}>
-              {isWarmup ? 'Movilidad y Activación' : isRest ? 'Transición' : currentBlock.type}
-            </span>
-
-            {/* AQUI SE CARGA LA IMAG
+              currentBlock.type === 'cardio' ? '
