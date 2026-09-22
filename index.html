@@ -10,7 +10,13 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans select-none antialiased">
-  <div id="root"></div>
+  
+  <!-- Este texto se verá por un segundo mientras carga. Si se queda aquí pegado, significa que se copió el código incompleto -->
+  <div id="root">
+    <div class="flex items-center justify-center min-h-screen text-slate-400 font-bold">
+      Cargando aplicación... ⏳
+    </div>
+  </div>
 
   <script type="text/babel">
     const { useState, useEffect } = React;
@@ -35,7 +41,6 @@
       }
     };
 
-    // Mapeo exacto de los nombres de los archivos para los calentamientos
     const WARMUPS = {
       lunes: [
         { name: "Marcha activa + hombros", cue: "Movimiento amplio.", img: "Lunes 1.jpg" },
@@ -316,7 +321,6 @@
       const [blockIdx, setBlockIdx] = useState(0);
       const [subPhase, setSubPhase] = useState(0);
       const [isRest, setIsRest] = useState(false);
-      // El calentamiento ahora da 45s por paso para no pasarse de los 5 min en total
       const [timeLeft, setTimeLeft] = useState(45); 
       const [running, setRunning] = useState(false);
       const [totalSecs, setTotalSecs] = useState(0);
@@ -381,9 +385,9 @@
           t = setInterval(() => {
             setTotalSecs(s => s + 1);
             setTimeLeft(prev => {
-              if (prev <= 4 && prev > 1) playBeep(440, 'sine', 0.1); // Pitidos de advertencia
+              if (prev <= 4 && prev > 1) playBeep(440, 'sine', 0.1); 
               if (prev === 1) {
-                playBeep(880, 'triangle', 0.35); // Pitido final
+                playBeep(880, 'triangle', 0.35);
                 nextStep();
                 return 0;
               }
@@ -416,6 +420,4 @@
         title = `${cardioMachine} (Cardio)`;
         subtitle = "Ritmo moderado constante durante 4 minutos.";
         mediaSrc = "Cardio.png";
-      } else {
-        const isA = subPhase % 2 === 0;
-        title =
+     
