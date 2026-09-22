@@ -5,18 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Mi Rutina Gym</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans select-none antialiased">
-  <div id="root"></div>
+<body class="bg-slate-950 text-slate-100 font-sans select-none antialiased min-h-screen">
+  <div id="app" class="max-w-md mx-auto min-h-screen flex flex-col justify-between p-4"></div>
 
-  <script type="text/babel">
-    const { useState, useEffect } = React;
-
-    // Generador de audio nativo Web Audio API
-    const playBeep = (freq = 440, type = 'sine', duration = 0.15) => {
+  <script>
+    // Audio nativo sin dependencias
+    function playBeep(freq = 440, type = 'sine', duration = 0.15) {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (!AudioCtx) return;
@@ -32,143 +27,111 @@
         osc.start();
         osc.stop(ctx.currentTime + duration);
       } catch (e) {
-        console.warn("Audio no disponible", e);
+        console.warn("Audio", e);
       }
-    };
+    }
 
-    // Ilustraciones Anatómicas Claras Integradas (Sin dependencias externas)
-    const ExerciseVisual = ({ type }) => {
-      switch (type) {
-        case 'squat': // Sentadilla profunda / Goblet
-          return (
-            <svg viewBox="0 0 160 120" className="w-full h-full stroke-blue-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
-              <text x="15" y="18" fill="#94a3b8" fontSize="10" stroke="none" fontWeight="bold">INICIO</text>
-              <circle cx="35" cy="30" r="7" className="fill-blue-500/20" />
-              <path d="M 35 37 L 35 68" />
-              <rect x="31" y="44" width="8" height="12" rx="2" className="fill-blue-500 stroke-blue-300" />
-              <path d="M 35 68 L 26 95 M 35 68 L 44 95" />
-              <path d="M 22 95 L 28 95 M 42 95 L 48 95" />
+    // Ilustraciones Anatómicas Claras
+    function getExerciseVisual(type) {
+      const svgs = {
+        squat: `
+          <svg viewBox="0 0 160 120" class="w-full h-full stroke-blue-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+            <text x="15" y="18" fill="#94a3b8" font-size="10" stroke="none" font-weight="bold">INICIO</text>
+            <circle cx="35" cy="30" r="7" class="fill-blue-500/20" />
+            <path d="M 35 37 L 35 68" />
+            <rect x="31" y="44" width="8" height="12" rx="2" class="fill-blue-500 stroke-blue-300" />
+            <path d="M 35 68 L 26 95 M 35 68 L 44 95" />
+            <path d="M 22 95 L 28 95 M 42 95 L 48 95" />
+            <path d="M 68 55 L 82 55" stroke="#38bdf8" stroke-dasharray="3,3" />
+            <polygon points="84,55 79,52 79,58" fill="#38bdf8" stroke="none" />
+            <text x="100" y="18" fill="#38bdf8" font-size="10" stroke="none" font-weight="bold">BAJADA</text>
+            <circle cx="125" cy="45" r="7" class="fill-blue-500/20" />
+            <path d="M 125 52 L 122 75" />
+            <rect x="126" y="58" width="8" height="12" rx="2" class="fill-blue-500 stroke-blue-300" />
+            <path d="M 122 75 L 102 76 L 104 100" />
+            <path d="M 122 75 L 140 76 L 138 100" />
+            <path d="M 98 100 L 106 100 M 134 100 L 142 100" />
+          </svg>`,
+        deadlift: `
+          <svg viewBox="0 0 160 120" class="w-full h-full stroke-emerald-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+            <text x="15" y="18" fill="#94a3b8" font-size="10" stroke="none" font-weight="bold">ERGUIDO</text>
+            <circle cx="35" cy="30" r="7" class="fill-emerald-500/20" />
+            <path d="M 35 37 L 35 70 L 35 100" />
+            <path d="M 35 44 L 28 65" />
+            <rect x="24" y="65" width="8" height="10" rx="2" class="fill-emerald-500 stroke-emerald-300" />
+            <path d="M 30 100 L 38 100" />
+            <path d="M 65 55 L 80 55" stroke="#34d399" stroke-dasharray="3,3" />
+            <polygon points="82,55 77,52 77,58" fill="#34d399" stroke="none" />
+            <text x="95" y="18" fill="#34d399" font-size="10" stroke="none" font-weight="bold">CADERA ATRÁS</text>
+            <circle cx="100" cy="42" r="7" class="fill-emerald-500/20" />
+            <path d="M 105 47 L 130 65" />
+            <path d="M 112 52 L 112 80" />
+            <rect x="108" y="80" width="8" height="10" rx="2" class="fill-emerald-500 stroke-emerald-300" />
+            <path d="M 130 65 L 126 84 L 122 100" />
+            <path d="M 116 100 L 126 100" />
+          </svg>`,
+        bridge: `
+          <svg viewBox="0 0 160 120" class="w-full h-full stroke-purple-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+            <line x1="10" y1="100" x2="150" y2="100" class="stroke-slate-700 stroke-1" />
+            <text x="35" y="25" fill="#c084fc" font-size="10" stroke="none" font-weight="bold">ELEVAR CADERA</text>
+            <circle cx="35" cy="92" r="7" class="fill-purple-500/20" />
+            <path d="M 42 94 L 80 62" />
+            <ellipse cx="88" cy="68" rx="5" ry="9" class="stroke-pink-400 fill-pink-500/30" />
+            <path d="M 80 62 L 105 66 L 102 98" />
+            <path d="M 98 98 L 108 98" />
+            <path d="M 78 50 L 78 36" stroke="#c084fc" stroke-dasharray="3,3" />
+            <polygon points="78,34 75,39 81,39" fill="#c084fc" stroke="none" />
+          </svg>`,
+        row: `
+          <svg viewBox="0 0 160 120" class="w-full h-full stroke-amber-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+            <text x="30" y="22" fill="#fbbf24" font-size="10" stroke="none" font-weight="bold">TRACCIÓN CODO</text>
+            <circle cx="50" cy="40" r="7" class="fill-amber-500/20" />
+            <path d="M 55 45 L 85 65" />
+            <path d="M 85 65 L 82 84 L 78 102" />
+            <path d="M 72 102 L 82 102" />
+            <path d="M 65 52 L 68 75 L 75 58" />
+            <rect x="70" y="52" width="10" height="8" rx="2" class="fill-amber-500 stroke-amber-300" />
+          </svg>`,
+        push: `
+          <svg viewBox="0 0 160 120" class="w-full h-full stroke-cyan-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+            <line x1="10" y1="95" x2="150" y2="95" class="stroke-slate-700 stroke-1" />
+            <text x="35" y="25" fill="#22d3ee" font-size="10" stroke="none" font-weight="bold">ALINEACIÓN NEUTRA</text>
+            <circle cx="120" cy="58" r="7" class="fill-cyan-500/20" />
+            <path d="M 115 64 L 40 85" />
+            <path d="M 100 68 L 96 82 L 94 95" />
+            <circle cx="38" cy="88" r="3" class="fill-cyan-400" />
+          </svg>`,
+        warmup: `
+          <svg viewBox="0 0 160 120" class="w-full h-full stroke-yellow-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+            <text x="35" y="20" fill="#facc15" font-size="10" stroke="none" font-weight="bold">MOVILIDAD ACTIVA</text>
+            <circle cx="80" cy="38" r="7" class="fill-yellow-500/20" />
+            <path d="M 80 45 L 80 75" />
+            <path d="M 80 54 L 54 42 M 80 54 L 106 42" />
+            <path d="M 80 75 L 65 102 M 80 75 L 95 102" />
+          </svg>`,
+        cardio: `
+          <svg viewBox="0 0 160 120" class="w-full h-full stroke-emerald-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+            <text x="35" y="20" fill="#34d399" font-size="10" stroke="none" font-weight="bold">RITMO CARDIO CONSTANTE</text>
+            <circle cx="95" cy="36" r="7" class="fill-emerald-500/20" />
+            <path d="M 90 42 L 75 65 L 90 74 L 105 100" />
+            <path d="M 75 65 L 58 78 L 48 76" />
+            <path d="M 80 52 L 102 58 L 115 54" />
+            <line x1="20" y1="102" x2="140" y2="102" class="stroke-slate-700 stroke-2" />
+          </svg>`
+      };
+      return svgs[type] || svgs.warmup;
+    }
 
-              <path d="M 68 55 L 82 55" stroke="#38bdf8" strokeDasharray="3,3" />
-              <polygon points="84,55 79,52 79,58" fill="#38bdf8" stroke="none" />
-
-              <text x="100" y="18" fill="#38bdf8" fontSize="10" stroke="none" fontWeight="bold">PROFUNDIDAD</text>
-              <circle cx="125" cy="45" r="7" className="fill-blue-500/20" />
-              <path d="M 125 52 L 122 75" />
-              <rect x="126" y="58" width="8" height="12" rx="2" className="fill-blue-500 stroke-blue-300" />
-              <path d="M 122 75 L 102 76 L 104 100" />
-              <path d="M 122 75 L 140 76 L 138 100" />
-              <path d="M 98 100 L 106 100 M 134 100 L 142 100" />
-            </svg>
-          );
-
-        case 'deadlift': // Peso Muerto Rumano (Bisagra de cadera)
-          return (
-            <svg viewBox="0 0 160 120" className="w-full h-full stroke-emerald-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
-              <text x="15" y="18" fill="#94a3b8" fontSize="10" stroke="none" fontWeight="bold">ERbandwidthIDO</text>
-              <circle cx="35" cy="30" r="7" className="fill-emerald-500/20" />
-              <path d="M 35 37 L 35 70 L 35 100" />
-              <path d="M 35 44 L 28 65" />
-              <rect x="24" y="65" width="8" height="10" rx="2" className="fill-emerald-500 stroke-emerald-300" />
-              <path d="M 30 100 L 38 100" />
-
-              <path d="M 65 55 L 80 55" stroke="#34d399" strokeDasharray="3,3" />
-              <polygon points="82,55 77,52 77,58" fill="#34d399" stroke="none" />
-
-              <text x="95" y="18" fill="#34d399" fontSize="10" stroke="none" fontWeight="bold">BISAGRA CADERA</text>
-              <circle cx="100" cy="42" r="7" className="fill-emerald-500/20" />
-              <path d="M 105 47 L 130 65" />
-              <path d="M 112 52 L 112 80" />
-              <rect x="108" y="80" width="8" height="10" rx="2" className="fill-emerald-500 stroke-emerald-300" />
-              <path d="M 130 65 L 126 84 L 122 100" />
-              <path d="M 116 100 L 126 100" />
-            </svg>
-          );
-
-        case 'bridge': // Hip Thrust / Puente de glúteo
-          return (
-            <svg viewBox="0 0 160 120" className="w-full h-full stroke-purple-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
-              <line x1="10" y1="100" x2="150" y2="100" className="stroke-slate-700 stroke-1" />
-              <text x="35" y="25" fill="#c084fc" fontSize="10" stroke="none" fontWeight="bold">CONTRACCIÓN ARRIBA</text>
-              <circle cx="35" cy="92" r="7" className="fill-purple-500/20" />
-              <path d="M 42 94 L 80 62" />
-              <ellipse cx="88" cy="68" rx="5" ry="9" className="stroke-pink-400 fill-pink-500/30" />
-              <path d="M 80 62 L 105 66 L 102 98" />
-              <path d="M 98 98 L 108 98" />
-              <path d="M 78 50 L 78 36" stroke="#c084fc" strokeDasharray="3,3" />
-              <polygon points="78,34 75,39 81,39" fill="#c084fc" stroke="none" />
-            </svg>
-          );
-
-        case 'row': // Remo con mancuernas
-          return (
-            <svg viewBox="0 0 160 120" className="w-full h-full stroke-amber-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
-              <text x="30" y="22" fill="#fbbf24" fontSize="10" stroke="none" fontWeight="bold">TRACCIÓN DE CODO</text>
-              <circle cx="50" cy="40" r="7" className="fill-amber-500/20" />
-              <path d="M 55 45 L 85 65" />
-              <path d="M 85 65 L 82 84 L 78 102" />
-              <path d="M 72 102 L 82 102" />
-              <path d="M 65 52 L 68 75 L 75 58" />
-              <rect x="70" y="52" width="10" height="8" rx="2" className="fill-amber-500 stroke-amber-300" />
-              <path d="M 68 72 L 74 60" stroke="#f59e0b" strokeWidth="2" />
-            </svg>
-          );
-
-        case 'push': // Flexiones / Push-ups / Plancha
-          return (
-            <svg viewBox="0 0 160 120" className="w-full h-full stroke-cyan-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
-              <line x1="10" y1="95" x2="150" y2="95" className="stroke-slate-700 stroke-1" />
-              <text x="35" y="25" fill="#22d3ee" fontSize="10" stroke="none" fontWeight="bold">ALINEACIÓN NEUTRA</text>
-              <circle cx="120" cy="58" r="7" className="fill-cyan-500/20" />
-              <path d="M 115 64 L 40 85" />
-              <path d="M 100 68 L 96 82 L 94 95" />
-              <circle cx="38" cy="88" r="3" className="fill-cyan-400" />
-            </svg>
-          );
-
-        case 'warmup': // Calentamiento y movilidad articular
-          return (
-            <svg viewBox="0 0 160 120" className="w-full h-full stroke-yellow-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
-              <text x="35" y="20" fill="#facc15" fontSize="10" stroke="none" fontWeight="bold">MOVILIDAD ACTIVA</text>
-              <circle cx="80" cy="38" r="7" className="fill-yellow-500/20" />
-              <path d="M 80 45 L 80 75" />
-              <path d="M 80 54 L 54 42 M 80 54 L 106 42" />
-              <path d="M 80 75 L 65 102 M 80 75 L 95 102" />
-              <path d="M 45 42 C 45 28, 115 28, 115 42" stroke="#facc15" strokeDasharray="3,3" />
-            </svg>
-          );
-
-        case 'cardio': // Cardio (Caminadora / Bicicleta)
-          return (
-            <svg viewBox="0 0 160 120" className="w-full h-full stroke-emerald-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
-              <text x="35" y="20" fill="#34d399" fontSize="10" stroke="none" fontWeight="bold">RITMO CARDIO CONSTANTE</text>
-              <circle cx="95" cy="36" r="7" className="fill-emerald-500/20" />
-              <path d="M 90 42 L 75 65 L 90 74 L 105 100" />
-              <path d="M 75 65 L 58 78 L 48 76" />
-              <path d="M 80 52 L 102 58 L 115 54" />
-              <line x1="20" y1="102" x2="140" y2="102" className="stroke-slate-700 stroke-2" />
-            </svg>
-          );
-
-        default:
-          return (
-            <svg viewBox="0 0 160 120" className="w-full h-full stroke-slate-400 fill-none stroke-2">
-              <circle cx="80" cy="40" r="8" />
-              <path d="M 80 48 L 80 80 L 68 105 M 80 80 L 92 105" />
-            </svg>
-          );
-      }
-    };
-
-    // 5 Minutos de Calentamiento Inicial Guiado
-    const WARMUP_EXERCISES = [
-      { name: "Círculos de Brazos y Hombros", cue: "Movimiento amplio circular activando escápulas y deltoides.", icon: "warmup" },
-      { name: "Rotaciones de Torso de Pie", cue: "Gira el tronco suavemente manteniendo la cadera al frente.", icon: "warmup" },
-      { name: "Sentadilla Profunda con Pausa", cue: "Baja despacio sin peso y abre la cadera empujando rodillas.", icon: "squat" },
-      { name: "Gato - Vaca en Colchoneta", cue: "Arquea y redondea la columna vertebral coordinando respiración.", icon: "push" },
-      { name: "Puente Glúteo de Activación", cue: "Eleva pelvis y contrae fuerte los glúteos 2 seg en el tope.", icon: "bridge" }
+    // Calentamiento inicial de 5 minutos
+    const WARMUP = [
+      { name: "Círculos de Brazos y Hombros", cue: "Movimiento circular amplio activando hombros.", icon: "warmup" },
+      { name: "Rotaciones de Torso de Pie", cue: "Gira el tronco suavemente manteniendo cadera fija.", icon: "warmup" },
+      { name: "Sentadilla Profunda con Pausa", cue: "Baja despacio sin peso y abre cadera con rodillas.", icon: "squat" },
+      { name: "Gato - Vaca en Colchoneta", cue: "Arquea y redondea columna coordinando aire.", icon: "push" },
+      { name: "Puente Glúteo de Activación", cue: "Eleva pelvis y aprieta glúteos 2 seg arriba.", icon: "bridge" }
     ];
 
+    // Rutinas Semanales
     const ROUTINES = {
       lunes: {
         name: "Lunes: Full Body",
@@ -178,7 +141,7 @@
           { type: 'cardio', name: 'Cardio Bloque 2', icon: 'cardio' },
           { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', iconA: 'deadlift', cueA: 'Bisagra de cadera, empuja glúteos atrás.', exB: 'Press Militar Mancuernas', iconB: 'warmup', cueB: 'Empuje vertical estricto sin arquear lumbar.' },
           { type: 'cardio', name: 'Cardio Bloque 3', icon: 'cardio' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Zancadas Alternas', iconA: 'squat', cueA: 'Paso largo, torso erguido y control en la bajada.', exB: 'Remo con Mancuernas', iconB: 'row', cueB: 'Espalda recta a 45°, tira codos hacia la cadera.' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Zancadas Alternas', iconA: 'squat', cueA: 'Paso largo, torso erguido y control en la bajada.', exB: 'Remo con Mancuernas', iconB: 'row', cueB: 'Espalda recta a 45°, codos pegados al cuerpo.' },
           { type: 'cardio', name: 'Cardio Bloque 4', icon: 'cardio' },
           { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo con Banda', iconA: 'bridge', cueA: 'Abre rodillas contra la banda y aprieta glúteo.', exB: 'Curl Bíceps con Banda/Mancuerna', iconB: 'row', cueB: 'Codos pegados a los costados, sube controlado.' },
           { type: 'cardio', name: 'Cardio Bloque 5', icon: 'cardio' },
@@ -201,7 +164,7 @@
         ]
       },
       miercoles: {
-        name: "Miércoles: Espalda + Tríceps + Hombros",
+        name: "Miércoles: Espalda + Hombros + Tríceps",
         blocks: [
           { type: 'cardio', name: 'Cardio Bloque 1', icon: 'cardio' },
           { type: 'fuerza', name: 'Fuerza 1', exA: 'Remo con Mancuernas', iconA: 'row', cueA: 'Tira con los codos hacia atrás.', exB: 'Fondos en Colchoneta/Banco', iconB: 'push', cueB: 'Flexiona codos a 90 grados y empuja.' },
@@ -210,7 +173,7 @@
           { type: 'cardio', name: 'Cardio Bloque 3', icon: 'cardio' },
           { type: 'fuerza', name: 'Fuerza 3', exA: 'Elevaciones Laterales', iconA: 'warmup', cueA: 'Sube hasta la altura de los hombros.', exB: 'Patada de Tríceps Mancuerna', iconB: 'row', cueB: 'Extiende el codo por completo hacia atrás.' },
           { type: 'cardio', name: 'Cardio Bloque 4', icon: 'cardio' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Pájaros (Deltoides Post)', iconA: 'row', cueA: 'Torso inclinado, abre brazos hacia los lados.', exB: 'Copa de Tríceps a 2 Manos', iconB: 'warmup', cueB: 'Codos cerrados apuntando hacia arriba.' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Pájaros (Deltoides Post)', iconA: 'row', cueA: 'Torso inclinado, abre brazos a los lados.', exB: 'Copa de Tríceps a 2 Manos', iconB: 'warmup', cueB: 'Codos cerrados apuntando hacia arriba.' },
           { type: 'cardio', name: 'Cardio Bloque 5', icon: 'cardio' },
           { type: 'fuerza', name: 'Fuerza 5', exA: 'Plancha Abdominal', iconA: 'push', cueA: 'Contrae abdomen y glúteos firmemente.', exB: 'Flexiones en Suelo', iconB: 'push', cueB: 'Pecho cerca del suelo en cada bajada.' },
         ]
@@ -247,68 +210,143 @@
       }
     };
 
-    function App() {
-      const [view, setView] = useState('home');
-      const [selectedDay, setSelectedDay] = useState('lunes');
-      const [cardioMachine, setCardioMachine] = useState('Caminadora');
+    // Estado Global de la App
+    const state = {
+      view: 'home',
+      selectedDay: 'lunes',
+      cardioMachine: 'Caminadora',
+      isWarmup: true,
+      warmupIdx: 0,
+      blockIdx: 0,
+      subPhase: 0,
+      isRest: false,
+      timeLeft: 60,
+      running: false,
+      totalSecs: 0,
+      timerInterval: null,
+      weightHistory: JSON.parse(localStorage.getItem('gym_weights') || '{}'),
+      bodyMetrics: JSON.parse(localStorage.getItem('gym_body_metrics') || '[]')
+    };
 
-      const [weightHistory, setWeightHistory] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('gym_weights') || '{}'); } catch(e) { return {}; }
-      });
-      const [bodyMetrics, setBodyMetrics] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('gym_body_metrics') || '[]'); } catch(e) { return []; }
-      });
-
-      const updateExerciseWeight = (exerciseName, weight) => {
-        const updated = {
-          ...weightHistory,
-          [exerciseName]: {
-            lastWeight: weight,
-            history: [...(weightHistory[exerciseName]?.history || []), { weight, date: new Date().toLocaleDateString() }]
-          }
-        };
-        setWeightHistory(updated);
-        try { localStorage.setItem('gym_weights', JSON.stringify(updated)); } catch(e){}
-      };
-
-      const addBodyMetric = (metric) => {
-        const updated = [{ ...metric, id: Date.now(), date: new Date().toLocaleDateString() }, ...bodyMetrics];
-        setBodyMetrics(updated);
-        try { localStorage.setItem('gym_body_metrics', JSON.stringify(updated)); } catch(e){}
-      };
-
-      return (
-        <div className="max-w-md mx-auto min-h-screen flex flex-col justify-between p-4">
-          {view === 'home' && (
-            <HomeView 
-              selectedDay={selectedDay} 
-              setSelectedDay={setSelectedDay}
-              cardioMachine={cardioMachine}
-              setCardioMachine={setCardioMachine}
-              onStartWorkout={() => setView('workout')}
-              onGoMetrics={() => setView('metrics')}
-            />
-          )}
-
-          {view === 'workout' && (
-            <WorkoutView 
-              routine={ROUTINES[selectedDay]} 
-              cardioMachine={cardioMachine}
-              weightHistory={weightHistory}
-              onSaveWeight={updateExerciseWeight}
-              onFinish={() => setView('home')}
-            />
-          )}
-
-          {view === 'metrics' && (
-            <MetricsView 
-              metrics={bodyMetrics} 
-              onAddMetric={addBodyMetric} 
-              onBack={() => setView('home')} 
-            />
-          )}
-        </div>
-      );
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
     }
 
-    function HomeView({ selectedDay, setSelectedDay, cardioMachine, s
+    function saveWeights(name, val) {
+      if (!val) return;
+      state.weightHistory[name] = {
+        lastWeight: val,
+        history: [...(state.weightHistory[name]?.history || []), { weight: val, date: new Date().toLocaleDateString() }]
+      };
+      localStorage.setItem('gym_weights', JSON.stringify(state.weightHistory));
+      render();
+    }
+
+    function nextStep() {
+      if (state.isWarmup) {
+        if (state.warmupIdx < 4) {
+          state.warmupIdx++;
+          state.timeLeft = 60;
+        } else {
+          state.isWarmup = false;
+          state.isRest = true;
+          state.timeLeft = 60;
+        }
+        render();
+        return;
+      }
+
+      const routine = ROUTINES[state.selectedDay];
+      const curBlock = routine.blocks[state.blockIdx];
+
+      if (state.isRest) {
+        state.isRest = false;
+        state.subPhase = 0;
+        const nextB = routine.blocks[state.blockIdx];
+        state.timeLeft = (nextB.type === 'cardio' ? 240 : 60);
+        render();
+        return;
+      }
+
+      if (curBlock.type === 'cardio') {
+        if (state.blockIdx + 1 < routine.blocks.length) {
+          state.blockIdx++;
+          state.isRest = true;
+          state.timeLeft = 60;
+        } else {
+          alert('¡Entrenamiento completado!');
+          resetToHome();
+        }
+        render();
+        return;
+      }
+
+      if (curBlock.type === 'fuerza') {
+        if (state.subPhase < 3) {
+          state.subPhase++;
+          state.timeLeft = 60;
+        } else {
+          if (state.blockIdx + 1 < routine.blocks.length) {
+            state.blockIdx++;
+            state.isRest = true;
+            state.timeLeft = 60;
+          } else {
+            alert('¡Entrenamiento completado!');
+            resetToHome();
+          }
+        }
+        render();
+      }
+    }
+
+    function toggleTimer() {
+      state.running = !state.running;
+      if (state.running) {
+        state.timerInterval = setInterval(() => {
+          state.totalSecs++;
+          if (state.timeLeft <= 4 && state.timeLeft > 1) {
+            playBeep(440, 'sine', 0.1);
+          }
+          if (state.timeLeft === 1) {
+            playBeep(880, 'triangle', 0.4);
+            nextStep();
+            return;
+          }
+          state.timeLeft--;
+          updateTimerUI();
+        }, 1000);
+      } else {
+        clearInterval(state.timerInterval);
+      }
+      render();
+    }
+
+    function resetCurrentPhase() {
+      const routine = ROUTINES[state.selectedDay];
+      const curBlock = routine.blocks[state.blockIdx];
+      if (state.isWarmup || state.isRest) state.timeLeft = 60;
+      else if (curBlock.type === 'cardio') state.timeLeft = 240;
+      else state.timeLeft = 60;
+      updateTimerUI();
+    }
+
+    function resetToHome() {
+      clearInterval(state.timerInterval);
+      state.running = false;
+      state.view = 'home';
+      state.isWarmup = true;
+      state.warmupIdx = 0;
+      state.blockIdx = 0;
+      state.subPhase = 0;
+      state.isRest = false;
+      state.totalSecs = 0;
+      state.timeLeft = 60;
+      render();
+    }
+
+    function updateTimerUI() {
+      const timerEl = document.getElementById('timer-display');
+      const totalEl = document.getElementById('total-time-display');
+      if (timerEl) timerEl.textContent = formatTime(state.timeLeft);
