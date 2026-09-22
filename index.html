@@ -379,8 +379,8 @@
         else if (blockIdx === 9) imgNumber = "7";
       }
 
-      // Concatena ej: "lunes 1.jpg"
-      const mediaSrc = imgNumber ? `${selectedDay} ${imgNumber}.jpg` : "";
+      // CAMBIO A PNG AQUÍ
+      const mediaSrc = imgNumber ? `${selectedDay} ${imgNumber}.png` : "";
       const lastRecorded = weightHistory[title]?.lastWeight;
 
       return (
@@ -403,4 +403,4 @@
               {isWarmup ? 'Movilidad y Activación' : isRest ? 'Transición' : currentBlock.type}
             </span>
 
-            {/* AQUI SE CAR
+            {/* AQUI SE CARGA LA IMAG
