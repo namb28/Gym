@@ -4,17 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Mi Rutina Gym</title>
+  
+  <!-- Detector de errores: Si el código se corta, te avisará en la pantalla -->
+  <script>
+    window.addEventListener('error', function(e) {
+      document.body.innerHTML = '<div style="padding:30px;color:#ff6b6b;background:#111;height:100vh;font-family:sans-serif;"><h3>⚠️ Código incompleto</h3><p>Parece que al copiar faltó una parte del código.<br><br>Error detectado: ' + e.message + '</p><p style="color:#888;font-size:12px;">Por favor, borra todo en GitHub y vuelve a copiar asegurándote de llegar hasta el &lt;/html&gt; final.</p></div>';
+    });
+  </script>
+
+  <!-- Bibliotecas de React y Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans select-none antialiased">
   
-  <!-- Este texto se verá por un segundo mientras carga. Si se queda aquí pegado, significa que se copió el código incompleto -->
   <div id="root">
     <div class="flex items-center justify-center min-h-screen text-slate-400 font-bold">
-      Cargando aplicación... ⏳
+      Cargando tu aplicación... ⏳
     </div>
   </div>
 
@@ -36,9 +44,7 @@
         gain.connect(ctx.destination);
         osc.start();
         osc.stop(ctx.currentTime + duration);
-      } catch (e) {
-        console.warn("Audio no disponible", e);
-      }
+      } catch (e) {}
     };
 
     const WARMUPS = {
@@ -93,85 +99,81 @@
         name: "Lunes: Full Body",
         blocks: [
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Mancuerna al pecho, baja profundo.', exB: 'Flexiones en suelo', cueB: 'Cuerpo en tabla recta, codos a 45°.' },
+          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Mancuerna al pecho.', exB: 'Flexiones en suelo', cueB: 'Codos a 45°.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Bisagra de cadera, empuja glúteos atrás.', exB: 'Press Militar Mancuernas', cueB: 'Empuje vertical estricto hacia arriba.' },
+          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Bisagra de cadera.', exB: 'Press Militar Mancuernas', cueB: 'Empuje vertical.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Zancadas Alternas', cueA: 'Paso largo y control al bajar.', exB: 'Remo con Mancuernas', cueB: 'Espalda recta a 45°, codos pegados.' },
+          { type: 'fuerza', exA: 'Zancadas Alternas', cueA: 'Control al bajar.', exB: 'Remo con Mancuernas', cueB: 'Espalda recta a 45°.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Puente Glúteo con Banda', cueA: 'Abre rodillas y aprieta arriba.', exB: 'Curl Bíceps con Banda/Mancuerna', cueB: 'Codos fijos, sube controlado.' },
+          { type: 'fuerza', exA: 'Puente Glúteo con Banda', cueA: 'Abre rodillas y aprieta.', exB: 'Curl Bíceps con Banda/Mancuerna', cueB: 'Sube controlado.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Plancha Abdominal', cueA: 'Activa glúteos y ombligo hacia adentro.', exB: 'Hollow Hold Colchoneta', cueB: 'Zona lumbar completamente apoyada.' },
+          { type: 'fuerza', exA: 'Plancha Abdominal', cueA: 'Activa glúteos.', exB: 'Hollow Hold Colchoneta', cueB: 'Zona lumbar apoyada.' },
         ]
       },
       martes: {
         name: "Martes: Piernas",
         blocks: [
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Baja profundo manteniendo pecho alto.', exB: 'Sentadilla Isométrica Pared', cueB: 'Muslos paralelos al suelo.' },
+          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Mantiene pecho alto.', exB: 'Sentadilla Isométrica Pared', cueB: 'Muslos paralelos.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Siente tensión en femorales e isquios.', exB: 'Elevación de Talones', cueB: 'Pausa 1 segundo arriba en puntas.' },
+          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Siente tensión en femorales.', exB: 'Elevación de Talones', cueB: 'Pausa arriba.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Zancada Búlgara Izq', cueA: 'Pie trasero elevado, baja vertical.', exB: 'Zancada Búlgara Der', cueB: 'Pie trasero elevado, baja vertical.' },
+          { type: 'fuerza', exA: 'Zancada Búlgara Izq', cueA: 'Pie trasero elevado.', exB: 'Zancada Búlgara Der', cueB: 'Pie trasero elevado.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Puente Glúteo Pies Elevados', cueA: 'Pies sobre banco para mayor recorrido.', exB: 'Monster Walk con Banda', cueB: 'Pasos laterales en semi-sentadilla.' },
+          { type: 'fuerza', exA: 'Puente Glúteo Pies Elevados', cueA: 'Mayor recorrido.', exB: 'Monster Walk con Banda', cueB: 'Pasos laterales.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Sentadilla Sumo Mancuerna', cueA: 'Pies abiertos a 45°, baja vertical.', exB: 'Abductores con Banda Sentado', cueB: 'Abre rodillas fuerte contra la banda.' },
+          { type: 'fuerza', exA: 'Sentadilla Sumo Mancuerna', cueA: 'Pies abiertos a 45°.', exB: 'Abductores con Banda Sentado', cueB: 'Abre rodillas.' },
         ]
       },
       miercoles: {
-        name: "Miércoles: Espalda + Tríceps + Hombros",
+        name: "Miércoles: Espalda + Tríceps",
         blocks: [
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Remo con Mancuernas', cueA: 'Tira con los codos hacia atrás.', exB: 'Fondos en Colchoneta/Banco', cueB: 'Flexiona codos a 90 grados y empuja.' },
+          { type: 'fuerza', exA: 'Remo con Mancuernas', cueA: 'Codos hacia atrás.', exB: 'Fondos en Colchoneta/Banco', cueB: 'Flexiona codos a 90°.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Floor Press Mancuernas', cueA: 'Toca suelo con tríceps y empuja arriba.', exB: 'Press Militar Mancuerna', cueB: 'Empuje vertical estricto sin impulso.' },
+          { type: 'fuerza', exA: 'Floor Press Mancuernas', cueA: 'Empuja arriba.', exB: 'Press Militar Mancuerna', cueB: 'Empuje estricto.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Elevaciones Laterales', cueA: 'Sube hasta la altura de los hombros.', exB: 'Patada de Tríceps Mancuerna', cueB: 'Extiende el codo por completo hacia atrás.' },
+          { type: 'fuerza', exA: 'Elevaciones Laterales', cueA: 'Hasta los hombros.', exB: 'Patada de Tríceps', cueB: 'Extiende el codo.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Pájaros (Deltoides Post)', cueA: 'Torso inclinado, abre brazos a los lados.', exB: 'Copa de Tríceps a 2 Manos', cueB: 'Codos cerrados apuntando hacia arriba.' },
+          { type: 'fuerza', exA: 'Pájaros (Deltoides Post)', cueA: 'Abre brazos a los lados.', exB: 'Copa de Tríceps a 2 Manos', cueB: 'Codos cerrados.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Plancha Abdominal', cueA: 'Contrae abdomen y glúteos firmemente.', exB: 'Flexiones en Suelo', cueB: 'Pecho cerca del suelo en cada bajada.' },
+          { type: 'fuerza', exA: 'Plancha Abdominal', cueA: 'Contrae abdomen.', exB: 'Flexiones en Suelo', cueB: 'Pecho cerca del suelo.' },
         ]
       },
       jueves: {
         name: "Jueves: Glúteos",
         blocks: [
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Hip Thrust Colchoneta', cueA: 'Aprieta glúteos fuertemente arriba.', exB: 'Clamshell con Banda', cueB: 'Abre la rodilla superior sin rotar cadera.' },
+          { type: 'fuerza', exA: 'Hip Thrust Colchoneta', cueA: 'Aprieta glúteos arriba.', exB: 'Clamshell con Banda', cueB: 'Sin rotar cadera.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Empuja glúteos atrás sintiendo el estiramiento.', exB: 'Patada Glúteo Cuadrupedia', cueB: 'Eleva la planta del pie hacia el techo.' },
+          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Glúteos atrás.', exB: 'Patada Glúteo Cuadrupedia', cueB: 'Hacia el techo.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Puente a 1 Pierna Izq', cueA: 'Empuja solo con el talón izquierdo.', exB: 'Puente a 1 Pierna Der', cueB: 'Empuja solo con el talón derecho.' },
+          { type: 'fuerza', exA: 'Puente a 1 Pierna Izq', cueA: 'Empuja con el talón.', exB: 'Puente a 1 Pierna Der', cueB: 'Empuja con el talón.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Frog Pumps Mancuerna', cueA: 'Plantas juntas, sube cadera y aprieta.', exB: 'Abducciones con Banda Sentado', cueB: 'Abre rodillas con fuerza continua.' },
+          { type: 'fuerza', exA: 'Frog Pumps Mancuerna', cueA: 'Plantas juntas, sube cadera.', exB: 'Abducciones con Banda Sentado', cueB: 'Fuerza continua.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Búlgara Foco Glúteo', cueA: 'Torso ligeramente inclinado al bajar.', exB: 'Caminata Lateral con Banda', cueB: 'Tensión constante en la banda elástica.' },
+          { type: 'fuerza', exA: 'Búlgara Foco Glúteo', cueA: 'Torso inclinado.', exB: 'Caminata Lateral con Banda', cueB: 'Tensión constante.' },
         ]
       },
       viernes: {
         name: "Viernes: Full Body (Énf. Inferior)",
         blocks: [
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Sentadilla profunda y controlada.', exB: 'Remo con Mancuernas', cueB: 'Junta escápulas en la parte alta.' },
+          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Sentadilla profunda.', exB: 'Remo con Mancuernas', cueB: 'Junta escápulas.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Baja las mancuernas rozando las piernas.', exB: 'Floor Press Mancuernas', cueB: 'Empuje de pecho desde colchoneta.' },
+          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Rozando las piernas.', exB: 'Floor Press Mancuernas', cueB: 'Empuje de pecho.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Step-ups / Subidas', cueA: 'Empuja con la pierna de arriba.', exB: 'Elevaciones Laterales', cueB: 'Controla la bajada en 2 segundos.' },
+          { type: 'fuerza', exA: 'Step-ups / Subidas', cueA: 'Empuja pierna de arriba.', exB: 'Elevaciones Laterales', cueB: 'Controla la bajada.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Puente Glúteo Banda', cueA: 'Abre rodillas al subir.', exB: 'Curl Bíceps Mancuerna', cueB: 'Contracción estricta sin balanceo.' },
+          { type: 'fuerza', exA: 'Puente Glúteo Banda', cueA: 'Abre rodillas al subir.', exB: 'Curl Bíceps Mancuerna', cueB: 'Sin balanceo.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Zancadas Hacia Atrás', cueA: 'Paso atrás controlado.', exB: 'Plancha Abdominal', cueB: 'Glúteos y core bloqueados.' },
+          { type: 'fuerza', exA: 'Zancadas Hacia Atrás', cueA: 'Paso atrás controlado.', exB: 'Plancha Abdominal', cueB: 'Glúteos bloqueados.' },
         ]
       }
     };
 
     const PREFIJOS_DIA = {
-      lunes: "Lunes",
-      martes: "Martes",
-      miercoles: "Miércoles",
-      jueves: "Jueves",
-      viernes: "Viernes"
+      lunes: "Lunes", martes: "Martes", miercoles: "Miércoles", jueves: "Jueves", viernes: "Viernes"
     };
 
     function App() {
@@ -180,10 +182,10 @@
       const [cardioMachine, setCardioMachine] = useState('Caminadora');
 
       const [weightHistory, setWeightHistory] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('gym_weights') || '{}'); } catch(e) { return {}; }
+        try { return JSON.parse(localStorage.getItem('gym_w') || '{}'); } catch(e) { return {}; }
       });
       const [bodyMetrics, setBodyMetrics] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('gym_body_metrics') || '[]'); } catch(e) { return []; }
+        try { return JSON.parse(localStorage.getItem('gym_m') || '[]'); } catch(e) { return []; }
       });
 
       const updateExerciseWeight = (exerciseName, weight) => {
@@ -195,13 +197,13 @@
           }
         };
         setWeightHistory(updated);
-        try { localStorage.setItem('gym_weights', JSON.stringify(updated)); } catch(e){}
+        try { localStorage.setItem('gym_w', JSON.stringify(updated)); } catch(e){}
       };
 
       const addBodyMetric = (metric) => {
         const updated = [{ ...metric, id: Date.now(), date: new Date().toLocaleDateString() }, ...bodyMetrics];
         setBodyMetrics(updated);
-        try { localStorage.setItem('gym_body_metrics', JSON.stringify(updated)); } catch(e){}
+        try { localStorage.setItem('gym_m', JSON.stringify(updated)); } catch(e){}
       };
 
       return (
@@ -241,9 +243,9 @@
       const days = [
         { key: 'lunes', label: 'Lunes', desc: 'Full body' },
         { key: 'martes', label: 'Martes', desc: 'Piernas' },
-        { key: 'miercoles', label: 'Miércoles', desc: 'Espalda + Hombros + Tríceps' },
+        { key: 'miercoles', label: 'Miércoles', desc: 'Espalda + Tríceps' },
         { key: 'jueves', label: 'Jueves', desc: 'Glúteos' },
-        { key: 'viernes', label: 'Viernes', desc: 'Full body (Enf. Inferior)' }
+        { key: 'viernes', label: 'Viernes', desc: 'Full body' }
       ];
       const machines = ['Caminadora', 'Bicicleta elíptica', 'Bicicleta estática'];
 
@@ -253,62 +255,30 @@
             <h1 className="text-2xl font-black text-white tracking-tight">MI ENTRENAMIENTO</h1>
             <p className="text-slate-400 text-xs">Calentamiento + 10 bloques (Fuerza y Cardio)</p>
           </div>
-
           <div className="space-y-2">
             <span className="text-[11px] uppercase font-bold text-slate-400 tracking-wider">Día</span>
             <div className="grid grid-cols-1 gap-2">
               {days.map(d => (
-                <button
-                  key={d.key}
-                  onClick={() => setSelectedDay(d.key)}
-                  className={`p-3 rounded-xl border text-left flex justify-between items-center transition ${
-                    selectedDay === d.key 
-                      ? 'bg-blue-600/20 border-blue-500 text-blue-200' 
-                      : 'bg-slate-900 border-slate-800 text-slate-300'
-                  }`}
-                >
-                  <div>
-                    <div className="font-bold text-sm">{d.label}</div>
-                    <div className="text-[11px] opacity-70">{d.desc}</div>
-                  </div>
+                <button key={d.key} onClick={() => setSelectedDay(d.key)} className={`p-3 rounded-xl border text-left flex justify-between items-center transition ${selectedDay === d.key ? 'bg-blue-600/20 border-blue-500 text-blue-200' : 'bg-slate-900 border-slate-800 text-slate-300'}`}>
+                  <div><div className="font-bold text-sm">{d.label}</div><div className="text-[11px] opacity-70">{d.desc}</div></div>
                   {selectedDay === d.key && <span className="text-blue-400 font-bold">✓</span>}
                 </button>
               ))}
             </div>
           </div>
-
           <div className="space-y-2">
             <span className="text-[11px] uppercase font-bold text-slate-400 tracking-wider">Máquina de Cardio</span>
             <div className="grid grid-cols-3 gap-2">
               {machines.map(m => (
-                <button
-                  key={m}
-                  onClick={() => setCardioMachine(m)}
-                  className={`p-2.5 rounded-xl border text-[11px] font-semibold text-center transition ${
-                    cardioMachine === m 
-                      ? 'bg-emerald-600/20 border-emerald-500 text-emerald-300' 
-                      : 'bg-slate-900 border-slate-800 text-slate-400'
-                  }`}
-                >
+                <button key={m} onClick={() => setCardioMachine(m)} className={`p-2 rounded-xl border text-[11px] font-semibold text-center transition ${cardioMachine === m ? 'bg-emerald-600/20 border-emerald-500 text-emerald-300' : 'bg-slate-900 border-slate-800 text-slate-400'}`}>
                   {m.replace('Bicicleta ', 'Bici ')}
                 </button>
               ))}
             </div>
           </div>
-
           <div className="space-y-2 pt-2">
-            <button
-              onClick={onStartWorkout}
-              className="w-full h-14 bg-blue-600 active:scale-95 rounded-2xl font-black text-base uppercase tracking-wider text-white shadow-lg shadow-blue-900/40 transition"
-            >
-              Comenzar Entrenamiento
-            </button>
-            <button
-              onClick={onGoMetrics}
-              className="w-full h-11 bg-slate-900 border border-slate-800 rounded-xl text-slate-300 font-semibold text-xs active:bg-slate-800 transition"
-            >
-              Ver / Registrar Medidas
-            </button>
+            <button onClick={onStartWorkout} className="w-full h-14 bg-blue-600 active:scale-95 rounded-2xl font-black text-base uppercase tracking-wider text-white shadow-lg transition">Comenzar Entrenamiento</button>
+            <button onClick={onGoMetrics} className="w-full h-11 bg-slate-900 border border-slate-800 rounded-xl text-slate-300 font-semibold text-xs transition">Ver / Registrar Medidas</button>
           </div>
         </div>
       );
@@ -317,7 +287,6 @@
     function WorkoutView({ routine, selectedDay, cardioMachine, weightHistory, onSaveWeight, onFinish }) {
       const [isWarmup, setIsWarmup] = useState(true);
       const [warmupIdx, setWarmupIdx] = useState(0);
-
       const [blockIdx, setBlockIdx] = useState(0);
       const [subPhase, setSubPhase] = useState(0);
       const [isRest, setIsRest] = useState(false);
@@ -327,7 +296,7 @@
       const [currentWeightInput, setCurrentWeightInput] = useState('');
 
       const currentBlock = routine.blocks[blockIdx];
-      const warmupsForDay = WARMUPS[selectedDay];
+      const warmupsForDay = WARMUPS[selectedDay] || [];
 
       const nextStep = () => {
         if (isWarmup) {
@@ -356,7 +325,7 @@
             setIsRest(true);
             setTimeLeft(60);
           } else {
-            alert('¡Entrenamiento completado!');
+            alert('¡Completado!');
             onFinish();
           }
           return;
@@ -372,7 +341,7 @@
               setIsRest(true);
               setTimeLeft(60);
             } else {
-              alert('¡Entrenamiento completado!');
+              alert('¡Completado!');
               onFinish();
             }
           }
@@ -386,11 +355,7 @@
             setTotalSecs(s => s + 1);
             setTimeLeft(prev => {
               if (prev <= 4 && prev > 1) playBeep(440, 'sine', 0.1); 
-              if (prev === 1) {
-                playBeep(880, 'triangle', 0.35);
-                nextStep();
-                return 0;
-              }
+              if (prev === 1) { playBeep(880, 'triangle', 0.35); nextStep(); return 0; }
               return prev - 1;
             });
           }, 1000);
@@ -398,26 +363,40 @@
         return () => clearInterval(t);
       }, [running, isWarmup, warmupIdx, isRest, blockIdx, subPhase]);
 
-      const formatTime = (s) => {
-        const m = Math.floor(s / 60);
-        const sec = s % 60;
-        return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-      };
+      const formatTime = (s) => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
 
-      let title = "";
-      let subtitle = "";
-      let mediaSrc = "";
+      let title = "", subtitle = "", mediaSrc = "";
 
-      if (isWarmup) {
+      if (isWarmup && warmupsForDay.length > 0) {
         title = warmupsForDay[warmupIdx].name;
         subtitle = warmupsForDay[warmupIdx].cue;
         mediaSrc = warmupsForDay[warmupIdx].img;
       } else if (isRest) {
-        title = "Descanso / Transición";
-        subtitle = "Respira y prepárate para el siguiente bloque.";
+        title = "Descanso";
+        subtitle = "Respira y prepárate.";
         mediaSrc = "Descanso.png";
       } else if (currentBlock.type === 'cardio') {
         title = `${cardioMachine} (Cardio)`;
-        subtitle = "Ritmo moderado constante durante 4 minutos.";
+        subtitle = "Ritmo moderado constante.";
         mediaSrc = "Cardio.png";
-     
+      } else {
+        const isA = subPhase % 2 === 0;
+        title = isA ? currentBlock.exA : currentBlock.exB;
+        subtitle = isA ? currentBlock.cueA : currentBlock.cueB;
+        let baseNum = blockIdx === 1 ? "3" : blockIdx === 3 ? "4" : blockIdx === 5 ? "5" : blockIdx === 7 ? "6" : "7";
+        mediaSrc = `${PREFIJOS_DIA[selectedDay]} ${baseNum}${isA ? ".jpg" : "~2.jpg"}`;
+      }
+
+      const imgSrcSeguro = mediaSrc ? mediaSrc.replace(/ /g, '%20') : "";
+      const lastRecorded = weightHistory[title] ? weightHistory[title].lastWeight : null;
+
+      return (
+        <div className="flex flex-col min-h-[92vh] justify-between">
+          <div className="flex justify-between items-center bg-slate-900 border border-slate-800 p-3 rounded-xl">
+            <button onClick={onFinish} className="text-xs text-red-400 font-bold uppercase">✕ Salir</button>
+            <span className="font-mono text-xs text-slate-400">Total: {formatTime(totalSecs)}</span>
+            <span className="text-xs font-bold text-blue-400">{isWarmup ? `Calentamiento ${warmupIdx + 1}/${warmupsForDay.length}` : `Bloque ${blockIdx + 1}/10`}</span>
+          </div>
+
+          <div className="text-center my-auto space-y-2 py-4 flex flex-col items-center">
+          
