@@ -35,109 +35,139 @@
       }
     };
 
-    const WARMUP_EXERCISES = [
-      { name: "Círculos de Brazos y Hombros", cue: "Movimiento amplio hacia adelante y hacia atrás." },
-      { name: "Rotaciones de Torso de Pie", cue: "Gira el tronco suavemente de lado a lado activando abdomen." },
-      { name: "Sentadilla Profunda con Pausa", cue: "Baja despacio sin peso y abre la cadera empujando rodillas." },
-      { name: "Gato - Vaca en Colchoneta", cue: "Arquea y redondea la columna vertebral coordinando aire." },
-      { name: "Puente Glúteo de Activación", cue: "Eleva pelvis despacio contrayendo glúteos 2 segundos." }
-    ];
+    // Mapeo exacto de los nombres de los archivos para los calentamientos
+    const WARMUPS = {
+      lunes: [
+        { name: "Marcha activa + hombros", cue: "Movimiento amplio.", img: "Lunes 1.jpg" },
+        { name: "Rotaciones torácicas", cue: "Gira el tronco suave.", img: "Lunes 1~2.jpg" },
+        { name: "Movilidad de cadera", cue: "Círculos amplios.", img: "Lunes 1~3.jpg" },
+        { name: "Sentadillas sin peso", cue: "Baja despacio.", img: "Lunes 1~4.jpg" },
+        { name: "Puente de glúteos", cue: "Activa glúteos arriba.", img: "Lunes 2.jpg" },
+        { name: "Bisagra de cadera", cue: "Empuja cadera atrás.", img: "Lunes 2~2.jpg" },
+        { name: "Remo suave con banda", cue: "Retrae escápulas.", img: "Lunes 2~3.jpg" }
+      ],
+      martes: [
+        { name: "Marcha + tobillos", cue: "Rodillas altas.", img: "Martes 1.jpg" },
+        { name: "Movilidad de rodillas", cue: "Flexión y extensión.", img: "Martes 1~2.jpg" },
+        { name: "Círculos de cadera", cue: "Movimiento amplio.", img: "Martes 1~3.jpg" },
+        { name: "Sentadillas sin peso", cue: "Baja despacio.", img: "Martes 1~4.jpg" },
+        { name: "Puentes de glúteos", cue: "Eleva pelvis.", img: "Martes 2.jpg" },
+        { name: "Bisagra de cadera", cue: "Espalda recta.", img: "Martes 2~2.jpg" },
+        { name: "Movilidad dinámica", cue: "Balanceos.", img: "Martes 2~3.jpg" }
+      ],
+      miercoles: [
+        { name: "Marcha + movilidad brazos", cue: "Círculos.", img: "Miércoles 1.jpg" },
+        { name: "Círculos de hombros", cue: "Atrás y adelante.", img: "Miércoles 1~2.jpg" },
+        { name: "Rotación torácica", cue: "Gira el torso.", img: "Miércoles 1~3.jpg" },
+        { name: "Apertura de pecho", cue: "Estira pectorales.", img: "Miércoles 2.jpg" },
+        { name: "Remo suave con banda", cue: "Activa espalda.", img: "Miércoles 2~2.jpg" },
+        { name: "Rotación externa banda", cue: "Codos pegados.", img: "Miércoles 2~3.jpg" }
+      ],
+      jueves: [
+        { name: "Marcha + movilidad cadera", cue: "Rodillas altas.", img: "Jueves 1.jpg" },
+        { name: "Círculos de cadera", cue: "Amplios.", img: "Jueves 1~2.jpg" },
+        { name: "Movilidad de tobillos", cue: "Rotaciones.", img: "Jueves 1~3.jpg" },
+        { name: "Sentadillas sin peso", cue: "Baja controlado.", img: "Jueves 1~4.jpg" },
+        { name: "Puentes de glúteos", cue: "Activa arriba.", img: "Jueves 2.jpg" },
+        { name: "Abducción con banda", cue: "Abre rodillas.", img: "Jueves 2~2.jpg" },
+        { name: "Bisagra de cadera", cue: "Espalda recta.", img: "Jueves 2~3.jpg" }
+      ],
+      viernes: [
+        { name: "Marcha", cue: "Activa cuerpo.", img: "Viernes 1.jpg" },
+        { name: "Movilidad tobillos/cadera", cue: "Rotaciones.", img: "Viernes 1~2.jpg" },
+        { name: "Rotación torácica", cue: "Gira el torso.", img: "Viernes 1~3.jpg" },
+        { name: "Sentadilla sin peso", cue: "Baja profundo.", img: "Viernes 1~4.jpg" },
+        { name: "Puente de glúteos", cue: "Activa glúteos.", img: "Viernes 2.jpg" },
+        { name: "Bisagra de cadera", cue: "Empuja atrás.", img: "Viernes 2~2.jpg" },
+        { name: "Remo suave con banda", cue: "Retrae escápulas.", img: "Viernes 2~3.jpg" }
+      ]
+    };
 
     const ROUTINES = {
       lunes: {
         name: "Lunes: Full Body",
         blocks: [
-          { type: 'cardio', name: 'Cardio Bloque 1' },
-          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', cueA: 'Mancuerna al esternón, baja profundo.', exB: 'Flexiones en suelo', cueB: 'Cuerpo en tabla recta, codos a 45 grados.' },
-          { type: 'cardio', name: 'Cardio Bloque 2' },
-          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', cueA: 'Bisagra de cadera, empuja glúteos atrás.', exB: 'Press Militar Mancuernas', cueB: 'Empuje vertical estricto hacia arriba.' },
-          { type: 'cardio', name: 'Cardio Bloque 3' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Zancadas Alternas', cueA: 'Paso largo, torso erguido y control al bajar.', exB: 'Remo con Mancuernas', cueB: 'Espalda recta a 45°, codos pegados al cuerpo.' },
-          { type: 'cardio', name: 'Cardio Bloque 4' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo con Banda', cueA: 'Abre rodillas contra la banda y aprieta arriba.', exB: 'Curl Bíceps con Banda/Mancuerna', cueB: 'Codos pegados a los costados, sube controlado.' },
-          { type: 'cardio', name: 'Cardio Bloque 5' },
-          { type: 'fuerza', name: 'Fuerza 5', exA: 'Plancha Abdominal', cueA: 'Activa glúteos y ombligo hacia adentro.', exB: 'Hollow Hold Colchoneta', cueB: 'Zona lumbar completamente apoyada en el suelo.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Mancuerna al pecho, baja profundo.', exB: 'Flexiones en suelo', cueB: 'Cuerpo en tabla recta, codos a 45°.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Bisagra de cadera, empuja glúteos atrás.', exB: 'Press Militar Mancuernas', cueB: 'Empuje vertical estricto hacia arriba.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Zancadas Alternas', cueA: 'Paso largo y control al bajar.', exB: 'Remo con Mancuernas', cueB: 'Espalda recta a 45°, codos pegados.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Puente Glúteo con Banda', cueA: 'Abre rodillas y aprieta arriba.', exB: 'Curl Bíceps con Banda/Mancuerna', cueB: 'Codos fijos, sube controlado.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Plancha Abdominal', cueA: 'Activa glúteos y ombligo hacia adentro.', exB: 'Hollow Hold Colchoneta', cueB: 'Zona lumbar completamente apoyada.' },
         ]
       },
       martes: {
         name: "Martes: Piernas",
         blocks: [
-          { type: 'cardio', name: 'Cardio Bloque 1' },
-          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', cueA: 'Baja profundo manteniendo pecho alto.', exB: 'Sentadilla Isométrica Pared', cueB: 'Muslos paralelos al suelo contra la pared.' },
-          { type: 'cardio', name: 'Cardio Bloque 2' },
-          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', cueA: 'Siente tensión en femorales e isquios.', exB: 'Elevación de Talones', cueB: 'Pausa 1 segundo arriba en puntas de pie.' },
-          { type: 'cardio', name: 'Cardio Bloque 3' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Zancada Búlgara Izq', cueA: 'Pie trasero elevado, baja vertical.', exB: 'Zancada Búlgara Der', cueB: 'Pie trasero elevado, baja vertical.' },
-          { type: 'cardio', name: 'Cardio Bloque 4' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo Pies Elevados', cueA: 'Pies sobre banco para mayor recorrido.', exB: 'Monster Walk con Banda', cueB: 'Pasos laterales en semi-sentadilla con banda.' },
-          { type: 'cardio', name: 'Cardio Bloque 5' },
-          { type: 'fuerza', name: 'Fuerza 5', exA: 'Sentadilla Sumo Mancuerna', cueA: 'Pies abiertos a 45 grados, baja vertical.', exB: 'Abductores con Banda Sentado', cueB: 'Abre rodillas fuerte contra la banda.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Baja profundo manteniendo pecho alto.', exB: 'Sentadilla Isométrica Pared', cueB: 'Muslos paralelos al suelo.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Siente tensión en femorales e isquios.', exB: 'Elevación de Talones', cueB: 'Pausa 1 segundo arriba en puntas.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Zancada Búlgara Izq', cueA: 'Pie trasero elevado, baja vertical.', exB: 'Zancada Búlgara Der', cueB: 'Pie trasero elevado, baja vertical.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Puente Glúteo Pies Elevados', cueA: 'Pies sobre banco para mayor recorrido.', exB: 'Monster Walk con Banda', cueB: 'Pasos laterales en semi-sentadilla.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Sentadilla Sumo Mancuerna', cueA: 'Pies abiertos a 45°, baja vertical.', exB: 'Abductores con Banda Sentado', cueB: 'Abre rodillas fuerte contra la banda.' },
         ]
       },
       miercoles: {
         name: "Miércoles: Espalda + Tríceps + Hombros",
         blocks: [
-          { type: 'cardio', name: 'Cardio Bloque 1' },
-          { type: 'fuerza', name: 'Fuerza 1', exA: 'Remo con Mancuernas', cueA: 'Tira con los codos hacia atrás.', exB: 'Fondos en Colchoneta/Banco', cueB: 'Flexiona codos a 90 grados y empuja.' },
-          { type: 'cardio', name: 'Cardio Bloque 2' },
-          { type: 'fuerza', name: 'Fuerza 2', exA: 'Floor Press Mancuernas', cueA: 'Toca suelo con tríceps y empuja arriba.', exB: 'Press Militar Mancuerna', cueB: 'Empuje vertical estricto sin impulso.' },
-          { type: 'cardio', name: 'Cardio Bloque 3' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Elevaciones Laterales', cueA: 'Sube hasta la altura de los hombros.', exB: 'Patada de Tríceps Mancuerna', cueB: 'Extiende el codo por completo hacia atrás.' },
-          { type: 'cardio', name: 'Cardio Bloque 4' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Pájaros (Deltoides Post)', cueA: 'Torso inclinado, abre brazos a los lados.', exB: 'Copa de Tríceps a 2 Manos', cueB: 'Codos cerrados apuntando hacia arriba.' },
-          { type: 'cardio', name: 'Cardio Bloque 5' },
-          { type: 'fuerza', name: 'Fuerza 5', exA: 'Plancha Abdominal', cueA: 'Contrae abdomen y glúteos firmemente.', exB: 'Flexiones en Suelo', cueB: 'Pecho cerca del suelo en cada bajada.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Remo con Mancuernas', cueA: 'Tira con los codos hacia atrás.', exB: 'Fondos en Colchoneta/Banco', cueB: 'Flexiona codos a 90 grados y empuja.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Floor Press Mancuernas', cueA: 'Toca suelo con tríceps y empuja arriba.', exB: 'Press Militar Mancuerna', cueB: 'Empuje vertical estricto sin impulso.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Elevaciones Laterales', cueA: 'Sube hasta la altura de los hombros.', exB: 'Patada de Tríceps Mancuerna', cueB: 'Extiende el codo por completo hacia atrás.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Pájaros (Deltoides Post)', cueA: 'Torso inclinado, abre brazos a los lados.', exB: 'Copa de Tríceps a 2 Manos', cueB: 'Codos cerrados apuntando hacia arriba.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Plancha Abdominal', cueA: 'Contrae abdomen y glúteos firmemente.', exB: 'Flexiones en Suelo', cueB: 'Pecho cerca del suelo en cada bajada.' },
         ]
       },
       jueves: {
         name: "Jueves: Glúteos",
         blocks: [
-          { type: 'cardio', name: 'Cardio Bloque 1' },
-          { type: 'fuerza', name: 'Fuerza 1', exA: 'Hip Thrust Colchoneta', cueA: 'Aprieta glúteos fuertemente arriba.', exB: 'Clamshell con Banda', cueB: 'Abre la rodilla superior sin rotar cadera.' },
-          { type: 'cardio', name: 'Cardio Bloque 2' },
-          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', cueA: 'Empuja glúteos atrás sintiendo el estiramiento.', exB: 'Patada Glúteo Cuadrupedia', cueB: 'Eleva la planta del pie hacia el techo.' },
-          { type: 'cardio', name: 'Cardio Bloque 3' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Puente a 1 Pierna Izq', cueA: 'Empuja solo con el talón izquierdo.', exB: 'Puente a 1 Pierna Der', cueB: 'Empuja solo con el talón derecho.' },
-          { type: 'cardio', name: 'Cardio Bloque 4' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Frog Pumps Mancuerna', cueA: 'Plantas juntas, sube cadera y aprieta.', exB: 'Abducciones con Banda Sentado', cueB: 'Abre rodillas con fuerza continua.' },
-          { type: 'cardio', name: 'Cardio Bloque 5' },
-          { type: 'fuerza', name: 'Fuerza 5', exA: 'Búlgara Foco Glúteo', cueA: 'Torso ligeramente inclinado al bajar.', exB: 'Caminata Lateral con Banda', cueB: 'Tensión constante en la banda elástica.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Hip Thrust Colchoneta', cueA: 'Aprieta glúteos fuertemente arriba.', exB: 'Clamshell con Banda', cueB: 'Abre la rodilla superior sin rotar cadera.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Empuja glúteos atrás sintiendo el estiramiento.', exB: 'Patada Glúteo Cuadrupedia', cueB: 'Eleva la planta del pie hacia el techo.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Puente a 1 Pierna Izq', cueA: 'Empuja solo con el talón izquierdo.', exB: 'Puente a 1 Pierna Der', cueB: 'Empuja solo con el talón derecho.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Frog Pumps Mancuerna', cueA: 'Plantas juntas, sube cadera y aprieta.', exB: 'Abducciones con Banda Sentado', cueB: 'Abre rodillas con fuerza continua.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Búlgara Foco Glúteo', cueA: 'Torso ligeramente inclinado al bajar.', exB: 'Caminata Lateral con Banda', cueB: 'Tensión constante en la banda elástica.' },
         ]
       },
       viernes: {
         name: "Viernes: Full Body (Énf. Inferior)",
         blocks: [
-          { type: 'cardio', name: 'Cardio Bloque 1' },
-          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', cueA: 'Sentadilla profunda y controlada.', exB: 'Remo con Mancuernas', cueB: 'Junta escápulas en la parte alta.' },
-          { type: 'cardio', name: 'Cardio Bloque 2' },
-          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', cueA: 'Baja las mancuernas rozando las piernas.', exB: 'Floor Press Mancuernas', cueB: 'Empuje de pecho desde colchoneta.' },
-          { type: 'cardio', name: 'Cardio Bloque 3' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Step-ups / Subidas', cueA: 'Empuja con la pierna de arriba.', exB: 'Elevaciones Laterales', cueB: 'Controla la bajada en 2 segundos.' },
-          { type: 'cardio', name: 'Cardio Bloque 4' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo Banda', cueA: 'Abre rodillas al subir.', exB: 'Curl Bíceps Mancuerna', cueB: 'Contracción estricta sin balanceo.' },
-          { type: 'cardio', name: 'Cardio Bloque 5' },
-          { type: 'fuerza', name: 'Fuerza 5', exA: 'Zancadas Hacia Atrás', cueA: 'Paso atrás controlado.', exB: 'Plancha Abdominal', cueB: 'Glúteos y core bloqueados.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Sentadilla profunda y controlada.', exB: 'Remo con Mancuernas', cueB: 'Junta escápulas en la parte alta.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Baja las mancuernas rozando las piernas.', exB: 'Floor Press Mancuernas', cueB: 'Empuje de pecho desde colchoneta.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Step-ups / Subidas', cueA: 'Empuja con la pierna de arriba.', exB: 'Elevaciones Laterales', cueB: 'Controla la bajada en 2 segundos.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Puente Glúteo Banda', cueA: 'Abre rodillas al subir.', exB: 'Curl Bíceps Mancuerna', cueB: 'Contracción estricta sin balanceo.' },
+          { type: 'cardio' },
+          { type: 'fuerza', exA: 'Zancadas Hacia Atrás', cueA: 'Paso atrás controlado.', exB: 'Plancha Abdominal', cueB: 'Glúteos y core bloqueados.' },
         ]
       }
     };
 
-    // Función segura para buscar la imagen
-    function obtenerNombreImagen(dia, isWarmup, wIdx, bIdx) {
-      const prefijos = {
-        lunes: "Lunes", martes: "Martes", miercoles: "Miercoles", jueves: "Jueves", viernes: "Viernes"
-      };
-      const prefijo = prefijos[dia];
-      
-      if (isWarmup) {
-        return wIdx < 3 ? (prefijo + " 1.png") : (prefijo + " 2.png");
-      }
-      if (bIdx === 1) return (prefijo + " 3.png");
-      if (bIdx === 3) return (prefijo + " 4.png");
-      if (bIdx === 5) return (prefijo + " 5.png");
-      if (bIdx === 7) return (prefijo + " 6.png");
-      if (bIdx === 9) return (prefijo + " 7.png");
-      return "";
-    }
+    const PREFIJOS_DIA = {
+      lunes: "Lunes",
+      martes: "Martes",
+      miercoles: "Miércoles",
+      jueves: "Jueves",
+      viernes: "Viernes"
+    };
 
     function App() {
       const [view, setView] = useState('home');
@@ -181,7 +211,6 @@
               onGoMetrics={() => setView('metrics')}
             />
           )}
-
           {view === 'workout' && (
             <WorkoutView 
               routine={ROUTINES[selectedDay]} 
@@ -192,7 +221,6 @@
               onFinish={() => setView('home')}
             />
           )}
-
           {view === 'metrics' && (
             <MetricsView 
               metrics={bodyMetrics} 
@@ -218,7 +246,7 @@
         <div className="flex flex-col space-y-5 pt-2">
           <div>
             <h1 className="text-2xl font-black text-white tracking-tight">MI ENTRENAMIENTO</h1>
-            <p className="text-slate-400 text-xs">5 min calentamiento + 10 bloques</p>
+            <p className="text-slate-400 text-xs">Calentamiento + 10 bloques (Fuerza y Cardio)</p>
           </div>
 
           <div className="space-y-2">
@@ -288,18 +316,20 @@
       const [blockIdx, setBlockIdx] = useState(0);
       const [subPhase, setSubPhase] = useState(0);
       const [isRest, setIsRest] = useState(false);
-      const [timeLeft, setTimeLeft] = useState(60);
+      // El calentamiento ahora da 45s por paso para no pasarse de los 5 min en total
+      const [timeLeft, setTimeLeft] = useState(45); 
       const [running, setRunning] = useState(false);
       const [totalSecs, setTotalSecs] = useState(0);
       const [currentWeightInput, setCurrentWeightInput] = useState('');
 
       const currentBlock = routine.blocks[blockIdx];
+      const warmupsForDay = WARMUPS[selectedDay];
 
       const nextStep = () => {
         if (isWarmup) {
-          if (warmupIdx < 4) {
+          if (warmupIdx < warmupsForDay.length - 1) {
             setWarmupIdx(w => w + 1);
-            setTimeLeft(60);
+            setTimeLeft(45);
           } else {
             setIsWarmup(false);
             setIsRest(true);
@@ -351,9 +381,9 @@
           t = setInterval(() => {
             setTotalSecs(s => s + 1);
             setTimeLeft(prev => {
-              if (prev <= 4 && prev > 1) playBeep(440, 'sine', 0.1);
+              if (prev <= 4 && prev > 1) playBeep(440, 'sine', 0.1); // Pitidos de advertencia
               if (prev === 1) {
-                playBeep(880, 'triangle', 0.35);
+                playBeep(880, 'triangle', 0.35); // Pitido final
                 nextStep();
                 return 0;
               }
@@ -372,190 +402,20 @@
 
       let title = "";
       let subtitle = "";
+      let mediaSrc = "";
 
       if (isWarmup) {
-        title = WARMUP_EXERCISES[warmupIdx].name;
-        subtitle = WARMUP_EXERCISES[warmupIdx].cue;
+        title = warmupsForDay[warmupIdx].name;
+        subtitle = warmupsForDay[warmupIdx].cue;
+        mediaSrc = warmupsForDay[warmupIdx].img;
       } else if (isRest) {
         title = "Descanso / Transición";
         subtitle = "Respira y prepárate para el siguiente bloque.";
+        mediaSrc = "Descanso.png";
       } else if (currentBlock.type === 'cardio') {
         title = `${cardioMachine} (Cardio)`;
         subtitle = "Ritmo moderado constante durante 4 minutos.";
+        mediaSrc = "Cardio.png";
       } else {
         const isA = subPhase % 2 === 0;
-        title = isA ? currentBlock.exA : currentBlock.exB;
-        subtitle = isA ? currentBlock.cueA : currentBlock.cueB;
-      }
-
-      // Llama a la función segura
-      const mediaSrc = obtenerNombreImagen(selectedDay, isWarmup, warmupIdx, blockIdx);
-      
-      const lastRecorded = weightHistory[title] ? weightHistory[title].lastWeight : null;
-
-      return (
-        <div className="flex flex-col min-h-[92vh] justify-between">
-          <div className="flex justify-between items-center bg-slate-900 border border-slate-800 p-3 rounded-xl">
-            <button onClick={onFinish} className="text-xs text-red-400 font-bold uppercase">✕ Salir</button>
-            <span className="font-mono text-xs text-slate-400">Total: {formatTime(totalSecs)}</span>
-            <span className="text-xs font-bold text-blue-400">
-              {isWarmup ? `Calentamiento ${warmupIdx + 1}/5` : `Bloque ${blockIdx + 1}/10`}
-            </span>
-          </div>
-
-          <div className="text-center my-auto space-y-2 py-4 flex flex-col items-center">
-            <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-              isWarmup ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
-              isRest ? 'bg-amber-500/20 text-amber-300' :
-              currentBlock.type === 'cardio' ? 'bg-emerald-500/20 text-emerald-300' :
-              'bg-blue-500/20 text-blue-300'
-            }`}>
-              {isWarmup ? 'Movilidad y Activación' : isRest ? 'Transición' : currentBlock.type}
-            </span>
-
-            {/* AQUI SE CARGA LA IMAGEN CON EL NOMBRE EXACTO */}
-            {mediaSrc ? (
-              <div className="w-full max-w-[16rem] h-32 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-lg mx-auto flex items-center justify-center my-2 p-1">
-                <img 
-                  src={mediaSrc} 
-                  alt={title} 
-                  className="w-full h-full object-contain rounded-lg"
-                />
-              </div>
-            ) : null}
-
-            <div className="min-h-[3rem] px-2 max-w-sm">
-              <h2 className="text-xl font-black text-white leading-tight">{title}</h2>
-              <p className="text-slate-400 text-xs mt-1">{subtitle}</p>
-            </div>
-
-            <div className="text-7xl font-mono font-black text-white tracking-tighter pb-2">
-              {formatTime(timeLeft)}
-            </div>
-
-            {!isWarmup && !isRest && currentBlock.type === 'fuerza' && (
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 w-full max-w-xs text-left space-y-2 mt-2">
-                <div className="flex justify-between text-xs text-slate-400">
-                  <span>Último registrado:</span>
-                  <span className="font-bold text-slate-200">{lastRecorded ? `${lastRecorded} kg` : 'Sin datos'}</span>
-                </div>
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    placeholder="Hoy (kg)"
-                    value={currentWeightInput}
-                    onChange={(e) => setCurrentWeightInput(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
-                  />
-                  <button
-                    onClick={() => {
-                      if (currentWeightInput) {
-                        onSaveWeight(title, currentWeightInput);
-                        setCurrentWeightInput('');
-                      }
-                    }}
-                    className="bg-blue-600 px-3 py-1.5 rounded-lg text-xs font-bold text-white shrink-0 active:scale-95"
-                  >
-                    Guardar
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="grid grid-cols-3 gap-2 mt-2">
-            <button
-              onClick={() => {
-                if (isWarmup) setTimeLeft(60);
-                else if (isRest) setTimeLeft(60);
-                else if (currentBlock.type === 'cardio') setTimeLeft(240);
-                else setTimeLeft(60);
-              }}
-              className="h-16 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col items-center justify-center text-slate-300 active:bg-slate-800"
-            >
-              <span className="text-base font-bold">↺</span>
-              <span className="text-[10px] uppercase font-bold tracking-wider mt-1">Reiniciar</span>
-            </button>
-
-            <button
-              onClick={() => setRunning(!running)}
-              className={`h-16 rounded-2xl flex flex-col items-center justify-center font-black uppercase text-xs tracking-wider shadow-lg transition ${
-                running ? 'bg-amber-600 text-white' : 'bg-emerald-600 text-white'
-              }`}
-            >
-              <span className="text-lg">{running ? '❚❚' : '▶'}</span>
-              <span className="text-[10px] mt-0.5">{running ? 'Pausa' : 'Iniciar'}</span>
-            </button>
-
-            <button
-              onClick={nextStep}
-              className="h-16 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col items-center justify-center text-slate-300 active:bg-slate-800"
-            >
-              <span className="text-base font-bold">⏭</span>
-              <span className="text-[10px] uppercase font-bold tracking-wider mt-1">Saltar</span>
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    function MetricsView({ metrics, onAddMetric, onBack }) {
-      const [form, setForm] = useState({ weight: '', cintura: '', cadera: '', brazo: '', muslo: '' });
-
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!form.weight && !form.cintura) return;
-        onAddMetric(form);
-        setForm({ weight: '', cintura: '', cadera: '', brazo: '', muslo: '' });
-      };
-
-      return (
-        <div className="space-y-4 pt-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold">Medidas Corporales</h2>
-            <button onClick={onBack} className="text-xs text-blue-400 font-semibold">← Volver</button>
-          </div>
-
-          <form onSubmit={handleSubmit} className="bg-slate-900 p-4 border border-slate-800 rounded-xl space-y-3">
-            <span className="text-xs font-bold text-slate-400 uppercase">Nuevo Registro</span>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <input type="number" step="0.1" placeholder="Peso (kg)" value={form.weight} onChange={e => setForm({...form, weight: e.target.value})} className="bg-slate-950 p-2 border border-slate-700 rounded-lg text-white" />
-              <input type="number" step="0.1" placeholder="Cintura (cm)" value={form.cintura} onChange={e => setForm({...form, cintura: e.target.value})} className="bg-slate-950 p-2 border border-slate-700 rounded-lg text-white" />
-              <input type="number" step="0.1" placeholder="Cadera (cm)" value={form.cadera} onChange={e => setForm({...form, cadera: e.target.value})} className="bg-slate-950 p-2 border border-slate-700 rounded-lg text-white" />
-              <input type="number" step="0.1" placeholder="Brazo (cm)" value={form.brazo} onChange={e => setForm({...form, brazo: e.target.value})} className="bg-slate-950 p-2 border border-slate-700 rounded-lg text-white" />
-              <input type="number" step="0.1" placeholder="Muslo (cm)" value={form.muslo} onChange={e => setForm({...form, muslo: e.target.value})} className="bg-slate-950 p-2 border border-slate-700 rounded-lg text-white col-span-2" />
-            </div>
-            <button type="submit" className="w-full bg-emerald-600 text-white font-bold p-2.5 rounded-lg text-xs uppercase">
-              Guardar Medidas
-            </button>
-          </form>
-
-          <div className="space-y-2">
-            <span className="text-xs font-bold text-slate-400 uppercase">Historial</span>
-            <div className="space-y-2">
-              {metrics.length === 0 ? (
-                <div className="text-xs text-slate-500 text-center py-4">No hay medidas registradas</div>
-              ) : (
-                metrics.map(m => (
-                  <div key={m.id} className="bg-slate-900 border border-slate-800 p-3 rounded-xl text-xs space-y-1">
-                    <div className="text-slate-400 font-bold">{m.date}</div>
-                    <div className="grid grid-cols-3 gap-1 text-slate-300">
-                      {m.weight && <span>Peso: <b>{m.weight} kg</b></span>}
-                      {m.cintura && <span>Cint: <b>{m.cintura} cm</b></span>}
-                      {m.cadera && <span>Cad: <b>{m.cadera} cm</b></span>}
-                      {m.brazo && <span>Brazo: <b>{m.brazo} cm</b></span>}
-                      {m.muslo && <span>Muslo: <b>{m.muslo} cm</b></span>}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    ReactDOM.render(<App />, document.getElementById('root'));
-  </script>
-</body>
-</html>
+        title =
