@@ -3,609 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Entrenador Personal</title>
+  <title>Mi Rutina Gym</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Tema visual deportivo y limpio (minimalista) */
-    :root {
-      --bg-main: #f8fafc;
-      --bg-card: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --accent: #8b5cf6; /* Morado suave / Femenino y deportivo */
-      --accent-hover: #7c3aed;
-      --success: #10b981;
-      --danger: #ef4444;
-      --cardio: #0ea5e9;
-    }
-    body { background-color: var(--bg-main); color: var(--text-main); font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-    .hide { display: none !important; }
-    .btn { transition: transform 0.1s, opacity 0.2s; }
-    .btn:active { transform: scale(0.96); }
-    .card { background-color: var(--bg-card); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
-    .tab-active { border-bottom: 2px solid var(--accent); color: var(--accent); font-weight: bold; }
-    /* SVGs integrados */
-    .icon-svg { width: 100%; height: 100%; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
-  </style>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="antialiased min-h-screen pb-10">
+<body class="bg-slate-950 text-slate-100 font-sans select-none antialiased">
+  <div id="root"></div>
 
-  <!-- APP CONTAINER -->
-  <div id="app" class="max-w-md mx-auto min-h-screen flex flex-col relative">
-    
-    <!-- PANTALLA: HOME -->
-    <div id="view-home" class="p-4 flex flex-col space-y-6 flex-1">
-      <div class="pt-4 pb-2 border-b border-slate-200">
-        <h1 class="text-3xl font-black tracking-tight" style="color: var(--accent);">MI ENTRENAMIENTO</h1>
-        <p class="text-sm text-slate-500 font-medium mt-1">Selecciona tu sesión de hoy</p>
-      </div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
 
-      <!-- Selector de Día -->
-      <div class="space-y-3">
-        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Día de la semana</label>
-        <div id="day-selector" class="grid gap-2"></div>
-      </div>
-
-      <!-- Selector de Cardio -->
-      <div class="space-y-3">
-        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Máquina de Cardio</label>
-        <div class="grid grid-cols-3 gap-2">
-          <button onclick="setCardio('Caminadora')" id="btn-Caminadora" class="cardio-btn p-3 rounded-xl border-2 text-xs font-semibold btn border-violet-500 bg-violet-50 text-violet-700">Caminadora</button>
-          <button onclick="setCardio('Elíptica')" id="btn-Elíptica" class="cardio-btn p-3 rounded-xl border-2 border-slate-100 text-xs font-semibold btn text-slate-500">Elíptica</button>
-          <button onclick="setCardio('Bicicleta')" id="btn-Bicicleta" class="cardio-btn p-3 rounded-xl border-2 border-slate-100 text-xs font-semibold btn text-slate-500">Bicicleta</button>
-        </div>
-      </div>
-
-      <div class="pt-4 space-y-3 mt-auto">
-        <button onclick="startWorkout()" class="btn w-full py-4 rounded-2xl font-black text-white text-lg tracking-wide shadow-lg" style="background-color: var(--accent);">INICIAR ENTRENAMIENTO</button>
-        <div class="grid grid-cols-2 gap-3">
-          <button onclick="switchView('view-progression')" class="btn py-3 rounded-xl border-2 border-slate-200 font-semibold text-sm text-slate-600">Progresión</button>
-          <button onclick="switchView('view-measurements')" class="btn py-3 rounded-xl border-2 border-slate-200 font-semibold text-sm text-slate-600">Medidas</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PANTALLA: ENTRENAMIENTO -->
-    <div id="view-workout" class="p-4 flex flex-col min-h-screen hide">
-      
-      <!-- Cabecera -->
-      <div class="flex justify-between items-center mb-4">
-        <button onclick="confirmExit()" class="text-slate-400 p-2 btn"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
-        <div class="text-center">
-          <div id="wo-header-day" class="text-xs font-bold text-slate-400 uppercase tracking-wider">LUNES · FULL BODY</div>
-          <div id="wo-header-block" class="text-sm font-black" style="color: var(--accent);">CALENTAMIENTO</div>
-        </div>
-        <button onclick="toggleSound()" id="btn-sound" class="text-slate-600 p-2 btn text-xl">🔊</button>
-      </div>
-
-      <!-- Aviso de Seguridad -->
-      <div class="bg-amber-50 border border-amber-200 text-amber-700 text-[10px] px-3 py-1.5 rounded-lg text-center mb-4 flex items-center justify-center font-medium">
-        ⚠️ Si un ejercicio produce dolor agudo, detente y ajústalo o sáltalo.
-      </div>
-
-      <!-- Contenedor Principal Visual -->
-      <div class="card p-6 flex-1 flex flex-col items-center justify-center text-center space-y-6 shadow-sm border border-slate-100 relative">
-        <span id="wo-badge" class="absolute top-4 left-4 px-3 py-1 bg-violet-100 text-violet-700 rounded-full text-[10px] font-bold uppercase tracking-widest">FUERZA</span>
-        
-        <!-- Ilustración -->
-        <div id="wo-visual" class="w-32 h-32 text-slate-300 my-2"></div>
-        
-        <!-- Títulos -->
-        <div class="w-full">
-          <h2 id="wo-title" class="text-2xl font-black text-slate-800 leading-tight">Sentadilla con mancuerna</h2>
-          <p id="wo-subtitle" class="text-sm text-slate-500 mt-2 font-medium">Posición inicial y movimiento</p>
-        </div>
-
-        <!-- Cronómetro -->
-        <div id="wo-timer" class="text-7xl font-black tracking-tighter" style="font-variant-numeric: tabular-nums; color: var(--text-main);">01:00</div>
-
-        <!-- Registro (Solo en Fuerza) -->
-        <div id="wo-logger" class="w-full bg-slate-50 rounded-xl p-3 border border-slate-200 hide">
-          <div class="flex justify-between text-xs text-slate-500 mb-2 font-medium">
-            <span>Último: <b id="wo-last-record" class="text-slate-700">--</b></span>
-          </div>
-          <div class="flex space-x-2">
-            <input type="number" id="wo-input-weight" placeholder="Peso (kg)" class="w-full p-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-violet-500 bg-white">
-            <input type="number" id="wo-input-reps" placeholder="Reps" class="w-20 p-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-violet-500 bg-white">
-            <button onclick="saveCurrentLog()" class="bg-violet-600 text-white font-bold px-4 rounded-lg text-xs btn active:bg-violet-700">✓</button>
-          </div>
-        </div>
-
-        <!-- Siguiente -->
-        <div class="w-full bg-slate-50 p-3 rounded-xl border border-slate-100 text-left">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Siguiente</div>
-          <div id="wo-next" class="text-sm font-bold text-slate-700 truncate">Press de pecho con mancuernas</div>
-        </div>
-      </div>
-
-      <!-- Controles -->
-      <div class="grid grid-cols-3 gap-3 mt-4">
-        <button onclick="resetTimer()" class="card py-4 flex flex-col items-center btn border border-slate-200">
-          <span class="text-lg">↺</span>
-          <span class="text-[10px] font-bold text-slate-500 mt-1 uppercase">Reiniciar</span>
-        </button>
-        <button onclick="togglePlay()" id="btn-play" class="card py-4 flex flex-col items-center btn shadow-md" style="background-color: var(--accent); color: white;">
-          <span class="text-xl" id="icon-play">❚❚</span>
-          <span class="text-[10px] font-bold mt-1 uppercase" id="text-play">Pausar</span>
-        </button>
-        <button onclick="skipPhase()" class="card py-4 flex flex-col items-center btn border border-slate-200">
-          <span class="text-lg">⏭</span>
-          <span class="text-[10px] font-bold text-slate-500 mt-1 uppercase">Saltar</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- PANTALLA: PROGRESIÓN -->
-    <div id="view-progression" class="p-4 flex flex-col min-h-screen hide">
-      <div class="flex items-center mb-6 pt-2">
-        <button onclick="switchView('view-home')" class="p-2 -ml-2 btn"><svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
-        <h2 class="text-xl font-black text-slate-800 ml-2">PROGRESIÓN DE CARGAS</h2>
-      </div>
-      
-      <div class="card p-4 mb-4 border border-slate-200">
-        <label class="text-xs font-bold text-slate-400 uppercase">Seleccionar Ejercicio</label>
-        <select id="prog-select" onchange="renderProgression()" class="w-full mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:border-violet-500"></select>
-      </div>
-
-      <div id="prog-list" class="space-y-3 flex-1 overflow-y-auto pb-6"></div>
-
-      <button onclick="exportData()" class="mt-4 p-3 w-full bg-slate-800 text-white rounded-xl font-bold text-sm btn">📥 Exportar mis datos (Copia de seguridad)</button>
-    </div>
-
-    <!-- PANTALLA: MEDIDAS -->
-    <div id="view-measurements" class="p-4 flex flex-col min-h-screen hide">
-      <div class="flex items-center mb-6 pt-2">
-        <button onclick="switchView('view-home')" class="p-2 -ml-2 btn"><svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
-        <h2 class="text-xl font-black text-slate-800 ml-2">SEGUIMIENTO CORPORAL</h2>
-      </div>
-
-      <div class="card p-4 border border-slate-200 mb-6 bg-violet-50/50">
-        <h3 class="text-xs font-bold text-slate-400 uppercase mb-3">Nuevo Registro</h3>
-        <div class="grid grid-cols-2 gap-3">
-          <div><label class="text-[10px] font-bold text-slate-500">PESO (KG)</label><input type="number" id="m-peso" class="w-full p-2 border border-slate-200 rounded-lg text-sm bg-white"></div>
-          <div><label class="text-[10px] font-bold text-slate-500">CINTURA (CM)</label><input type="number" id="m-cintura" class="w-full p-2 border border-slate-200 rounded-lg text-sm bg-white"></div>
-          <div><label class="text-[10px] font-bold text-slate-500">CADERA (CM)</label><input type="number" id="m-cadera" class="w-full p-2 border border-slate-200 rounded-lg text-sm bg-white"></div>
-          <div><label class="text-[10px] font-bold text-slate-500">BRAZO (CM)</label><input type="number" id="m-brazo" class="w-full p-2 border border-slate-200 rounded-lg text-sm bg-white"></div>
-          <div class="col-span-2"><label class="text-[10px] font-bold text-slate-500">MUSLO (CM)</label><input type="number" id="m-muslo" class="w-full p-2 border border-slate-200 rounded-lg text-sm bg-white"></div>
-        </div>
-        <button onclick="saveMeasurement()" class="w-full mt-4 bg-slate-800 text-white font-bold py-3 rounded-xl text-sm btn">Guardar Medidas</button>
-      </div>
-
-      <h3 class="text-xs font-bold text-slate-400 uppercase mb-3">Historial</h3>
-      <div id="meas-list" class="space-y-3 flex-1 overflow-y-auto pb-6"></div>
-    </div>
-
-  </div>
-
-  <script>
-    /* ==========================================
-       DATOS DE ENTRENAMIENTO (Estructura Solicitada)
-       ========================================== */
-    const WARMUPS = {
-      lunes: [
-        { name: "Marcha activa + movilidad hombros", type: "warmup" },
-        { name: "Rotaciones torácicas", type: "warmup" },
-        { name: "Movilidad de cadera", type: "warmup" },
-        { name: "Sentadillas sin peso", type: "squat" },
-        { name: "Puente de glúteos", type: "bridge" },
-        { name: "Bisagra de cadera", type: "hinge" },
-        { name: "Remo suave con banda", type: "pull" }
-      ],
-      martes: [
-        { name: "Marcha + movilidad tobillos", type: "warmup" },
-        { name: "Movilidad de rodillas", type: "warmup" },
-        { name: "Círculos de cadera", type: "warmup" },
-        { name: "Sentadillas sin peso", type: "squat" },
-        { name: "Puentes de glúteos", type: "bridge" },
-        { name: "Bisagra de cadera", type: "hinge" },
-        { name: "Movilidad dinámica piernas", type: "warmup" }
-      ],
-      miercoles: [
-        { name: "Marcha + movilidad brazos", type: "warmup" },
-        { name: "Círculos de hombros", type: "warmup" },
-        { name: "Rotación torácica", type: "warmup" },
-        { name: "Apertura de pecho", type: "warmup" },
-        { name: "Remo suave con banda", type: "pull" },
-        { name: "Rotación externa con banda", type: "pull" }
-      ],
-      jueves: [
-        { name: "Marcha + movilidad cadera", type: "warmup" },
-        { name: "Círculos de cadera", type: "warmup" },
-        { name: "Movilidad de tobillos", type: "warmup" },
-        { name: "Sentadillas sin peso", type: "squat" },
-        { name: "Puentes de glúteos", type: "bridge" },
-        { name: "Abducción con banda", type: "bridge" },
-        { name: "Bisagra de cadera", type: "hinge" }
-      ],
-      viernes: [
-        { name: "Marcha", type: "warmup" },
-        { name: "Movilidad tobillos y cadera", type: "warmup" },
-        { name: "Rotación torácica", type: "warmup" },
-        { name: "Sentadilla sin peso", type: "squat" },
-        { name: "Puente de glúteos", type: "bridge" },
-        { name: "Bisagra de cadera", type: "hinge" },
-        { name: "Remo suave con banda", type: "pull" }
-      ]
-    };
-
-    const ROUTINES = {
-      lunes: {
-        title: "FULL BODY",
-        blocks: [
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Sentadilla con mancuerna', aType: 'squat', b: 'Press de pecho con mancuernas', bType: 'push' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Remo con mancuernas', aType: 'pull', b: 'Peso muerto rumano con mancuernas', bType: 'hinge' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Press de hombros con mancuernas', aType: 'push', b: 'Zancada atrás con mancuernas', bType: 'squat' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Hip thrust con mancuerna', aType: 'bridge', b: 'Remo con banda', bType: 'pull' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Sentadilla + press con mancuernas', aType: 'squat', b: 'Dead bug en colchoneta', bType: 'core' }
-        ]
-      },
-      martes: {
-        title: "PIERNAS",
-        blocks: [
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Sentadilla con mancuernas', aType: 'squat', b: 'Zancada atrás con mancuernas', bType: 'squat' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Peso muerto rumano con mancuernas', aType: 'hinge', b: 'Curl de isquiotibiales con banda', bType: 'hinge' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Step-up con mancuernas', aType: 'squat', b: 'Sentadilla sumo con mancuerna', bType: 'squat' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Elevación de pantorrillas', aType: 'warmup', b: 'Puente de glúteos con banda', bType: 'bridge' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Zancada lateral', aType: 'squat', b: 'Dead bug', bType: 'core' }
-        ]
-      },
-      miercoles: {
-        title: "ESPALDA + TRÍCEPS + HOMBROS",
-        blocks: [
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Remo con banda', aType: 'pull', b: 'Pullover con mancuerna', bType: 'pull' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Press de hombros con mancuernas', aType: 'push', b: 'Elevaciones laterales', aType: 'warmup' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Remo a una mano con mancuerna', aType: 'pull', b: 'Pájaros/reverse fly con mancuernas', bType: 'pull' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Extensión de tríceps con banda', aType: 'push', b: 'Extensión de tríceps sobre la cabeza', bType: 'push' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Face pull con banda', aType: 'pull', b: 'Press de pecho con mancuernas', bType: 'push' }
-        ]
-      },
-      jueves: {
-        title: "GLÚTEOS",
-        blocks: [
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Hip thrust con mancuerna', aType: 'bridge', b: 'Abducción de cadera con banda', bType: 'bridge' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Peso muerto rumano con mancuernas', aType: 'hinge', b: 'Patada de glúteo con banda', bType: 'bridge' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Sentadilla búlgara con mancuernas', aType: 'squat', b: 'Abducción de cadera con banda', bType: 'bridge' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Puente de glúteos con banda', aType: 'bridge', b: 'Curl de isquiotibiales con banda', bType: 'hinge' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Caminata lateral con banda', aType: 'squat', b: 'Bird dog en colchoneta', bType: 'core' }
-        ]
-      },
-      viernes: {
-        title: "FULL BODY + TREN INFERIOR",
-        blocks: [
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Sentadilla goblet', aType: 'squat', b: 'Remo con mancuernas', bType: 'pull' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Peso muerto rumano con mancuernas', aType: 'hinge', b: 'Press de pecho con mancuernas', bType: 'push' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Zancada atrás con mancuernas', aType: 'squat', b: 'Press de hombros con mancuernas', bType: 'push' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Hip thrust con mancuerna', aType: 'bridge', b: 'Elevación de pantorrillas', bType: 'warmup' },
-          { type: 'cardio' },
-          { type: 'fuerza', a: 'Sentadilla sumo', aType: 'squat', b: 'Dead bug', bType: 'core' }
-        ]
-      }
-    };
-
-    /* ==========================================
-       ESTADO GLOBAL
-       ========================================== */
-    let state = {
-      day: 'lunes',
-      cardio: 'Caminadora',
-      phase: 'warmup', // warmup, block, transition, stretch, done
-      blockIdx: 0,
-      subPhase: 0, // 0: A, 1: B, 2: A, 3: B (para fuerza)
-      warmupIdx: 0,
-      timeLeft: 0,
-      isRunning: false,
-      soundOn: true,
-      timerId: null,
-      logs: JSON.parse(localStorage.getItem('gym_logs') || '{}'),
-      measurements: JSON.parse(localStorage.getItem('gym_metrics') || '[]')
-    };
-
-    // Inicializar UI Home
-    const daysArr = Object.keys(ROUTINES);
-    const daySelector = document.getElementById('day-selector');
-    daysArr.forEach(d => {
-      const btn = document.createElement('button');
-      btn.className = `p-3 rounded-xl border-2 text-left flex justify-between items-center btn ${d === 'lunes' ? 'border-violet-500 bg-violet-50 text-violet-700' : 'border-slate-100 bg-white text-slate-600'}`;
-      btn.innerHTML = `<span class="font-black uppercase text-sm">${d} <span class="text-xs font-medium text-slate-400 block">${ROUTINES[d].title}</span></span>`;
-      btn.onclick = () => {
-        state.day = d;
-        Array.from(daySelector.children).forEach(c => { c.classList.remove('border-violet-500', 'bg-violet-50', 'text-violet-700'); c.classList.add('border-slate-100', 'bg-white', 'text-slate-600'); });
-        btn.classList.remove('border-slate-100', 'bg-white', 'text-slate-600');
-        btn.classList.add('border-violet-500', 'bg-violet-50', 'text-violet-700');
-      };
-      daySelector.appendChild(btn);
-    });
-
-    function setCardio(machine) {
-      state.cardio = machine;
-      document.querySelectorAll('.cardio-btn').forEach(b => {
-        b.classList.remove('border-violet-500', 'bg-violet-50', 'text-violet-700');
-        b.classList.add('border-slate-100', 'text-slate-500');
-      });
-      const btn = document.getElementById(`btn-${machine}`);
-      btn.classList.remove('border-slate-100', 'text-slate-500');
-      btn.classList.add('border-violet-500', 'bg-violet-50', 'text-violet-700');
-    }
-
-    function switchView(viewId) {
-      ['view-home', 'view-workout', 'view-progression', 'view-measurements'].forEach(id => {
-        document.getElementById(id).classList.add('hide');
-      });
-      document.getElementById(viewId).classList.remove('hide');
-      if(viewId === 'view-progression') renderProgressionSelect();
-      if(viewId === 'view-measurements') renderMeasurements();
-    }
-
-    /* ==========================================
-       LÓGICA DEL CRONÓMETRO Y ENTRENAMIENTO
-       ========================================== */
-    function startWorkout() {
-      // Iniciar Audio Context en interacción de usuario
-      playBeep(0, 'sine', 0); 
-      
-      state.phase = 'warmup';
-      state.warmupIdx = 0;
-      state.blockIdx = 0;
-      state.subPhase = 0;
-      state.isRunning = true;
-      
-      // Calentamiento: Total 5 min, dividimos entre los ejercicios
-      const warmupTotal = WARMUPS[state.day].length;
-      state.timeLeft = Math.floor(300 / warmupTotal); 
-      
-      switchView('view-workout');
-      updateWorkoutUI();
-      if(state.timerId) clearInterval(state.timerId);
-      state.timerId = setInterval(tick, 1000);
-    }
-
-    function togglePlay() {
-      state.isRunning = !state.isRunning;
-      const btn = document.getElementById('btn-play');
-      if(state.isRunning) {
-        document.getElementById('icon-play').innerText = '❚❚';
-        document.getElementById('text-play').innerText = 'Pausar';
-        btn.style.backgroundColor = 'var(--accent)';
-      } else {
-        document.getElementById('icon-play').innerText = '▶';
-        document.getElementById('text-play').innerText = 'Continuar';
-        btn.style.backgroundColor = 'var(--success)';
-      }
-    }
-
-    function resetTimer() {
-      if(state.phase === 'warmup') state.timeLeft = Math.floor(300 / WARMUPS[state.day].length);
-      else if(state.phase === 'transition') state.timeLeft = 60;
-      else if(state.phase === 'stretch') state.timeLeft = 300;
-      else {
-        const block = ROUTINES[state.day].blocks[state.blockIdx];
-        if(block.type === 'cardio') state.timeLeft = 240; // 4 min
-        else state.timeLeft = 60; // 1 min per subphase
-      }
-      updateTimerDisplay();
-    }
-
-    function skipPhase() { advancePhase(); }
-
-    function tick() {
-      if(!state.isRunning) return;
-      
-      // Sonidos de advertencia
-      if (state.soundOn) {
-        if (state.timeLeft <= 4 && state.timeLeft > 1) {
-          playBeep(440, 'sine', 0.1); // Beep corto 3,2,1
-        } else if (state.timeLeft === 1) {
-          if (state.phase === 'transition' || state.subPhase === 3) {
-            playBeep(880, 'triangle', 0.4); // Cambio bloque
-          } else {
-            playBeep(600, 'square', 0.3); // Cambio ejercicio
-          }
-        }
-      }
-
-      state.timeLeft--;
-      if(state.timeLeft <= 0) advancePhase();
-      updateTimerDisplay();
-    }
-
-    function advancePhase() {
-      if (state.phase === 'warmup') {
-        state.warmupIdx++;
-        if (state.warmupIdx >= WARMUPS[state.day].length) {
-          state.phase = 'transition';
-          state.timeLeft = 60;
-        } else {
-          state.timeLeft = Math.floor(300 / WARMUPS[state.day].length);
-        }
-      } 
-      else if (state.phase === 'transition') {
-        if (state.blockIdx >= 10) {
-          state.phase = 'stretch';
-          state.timeLeft = 300;
-        } else {
-          state.phase = 'block';
-          const block = ROUTINES[state.day].blocks[state.blockIdx];
-          state.timeLeft = block.type === 'cardio' ? 240 : 60;
-          state.subPhase = 0;
-        }
-      }
-      else if (state.phase === 'block') {
-        const block = ROUTINES[state.day].blocks[state.blockIdx];
-        if (block.type === 'cardio') {
-          state.blockIdx++;
-          state.phase = 'transition';
-          state.timeLeft = 60;
-        } else {
-          state.subPhase++;
-          if (state.subPhase >= 4) {
-            state.blockIdx++;
-            state.phase = 'transition';
-            state.timeLeft = 60;
-          } else {
-            state.timeLeft = 60;
-          }
-        }
-      }
-      else if (state.phase === 'stretch') {
-        state.phase = 'done';
-        state.isRunning = false;
-        clearInterval(state.timerId);
-        alert("¡Entrenamiento Completado!");
-        switchView('view-home');
-        return;
-      }
-      updateWorkoutUI();
-    }
-
-    /* ==========================================
-       ACTUALIZACIÓN DE INTERFAZ DURANTE ENTRENAMIENTO
-       ========================================== */
-    function updateWorkoutUI() {
-      if (state.phase === 'done') return;
-      
-      const badge = document.getElementById('wo-badge');
-      const title = document.getElementById('wo-title');
-      const subtitle = document.getElementById('wo-subtitle');
-      const visual = document.getElementById('wo-visual');
-      const next = document.getElementById('wo-next');
-      const logger = document.getElementById('wo-logger');
-      
-      document.getElementById('wo-header-day').innerText = `${state.day.toUpperCase()} · ${ROUTINES[state.day].title}`;
-      
-      logger.classList.add('hide');
-
-      let currentEx = "";
-      let typeIcon = "warmup";
-
-      if (state.phase === 'warmup') {
-        document.getElementById('wo-header-block').innerText = "CALENTAMIENTO (5 MIN)";
-        badge.innerText = "MOVILIDAD";
-        badge.className = "absolute top-4 left-4 px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-[10px] font-bold uppercase tracking-widest";
-        currentEx = WARMUPS[state.day][state.warmupIdx].name;
-        title.innerText = currentEx;
-        subtitle.innerText = "Prepara articulaciones y músculos";
-        typeIcon = WARMUPS[state.day][state.warmupIdx].type;
-        next.innerText = state.warmupIdx + 1 < WARMUPS[state.day].length ? WARMUPS[state.day][state.warmupIdx+1].name : "Bloque 1 (Transición)";
-      }
-      else if (state.phase === 'transition') {
-        document.getElementById('wo-header-block').innerText = "RECUPERACIÓN";
-        badge.innerText = "DESCANSO";
-        badge.className = "absolute top-4 left-4 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-[10px] font-bold uppercase tracking-widest";
-        title.innerText = "Transición / Descanso";
-        subtitle.innerText = "Respira y prepárate para el siguiente bloque";
-        typeIcon = "warmup";
-        
-        if (state.blockIdx < 10) {
-          const nextBlock = ROUTINES[state.day].blocks[state.blockIdx];
-          next.innerText = nextBlock.type === 'cardio' ? `Cardio: ${state.cardio}` : nextBlock.a;
-        } else {
-          next.innerText = "Estiramiento Final";
-        }
-      }
-      else if (state.phase === 'stretch') {
-        document.getElementById('wo-header-block').innerText = "ESTIRAMIENTO (5 MIN)";
-        badge.innerText = "ENFRIAMIENTO";
-        badge.className = "absolute top-4 left-4 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold uppercase tracking-widest";
-        title.innerText = "Estiramiento Completo";
-        subtitle.innerText = "Mantén cada postura suavemente";
-        typeIcon = "warmup";
-        next.innerText = "Fin del entrenamiento";
-      }
-      else { // phase === 'block'
-        const blockNum = state.blockIdx + 1;
-        document.getElementById('wo-header-block').innerText = `BLOQUE ${blockNum} / 10`;
-        const block = ROUTINES[state.day].blocks[state.blockIdx];
-        
-        if (block.type === 'cardio') {
-          badge.innerText = "CARDIO";
-          badge.className = "absolute top-4 left-4 px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-[10px] font-bold uppercase tracking-widest";
-          title.innerText = state.cardio;
-          
-          // Intervalos visuales simples según el bloque (par/impar para variar)
-          if(blockNum % 2 !== 0) subtitle.innerText = "Intervalos: 1 min moderado / 1 min rápido";
-          else subtitle.innerText = "Ritmo moderado y constante";
-          
-          typeIcon = "cardio";
-          next.innerText = "Transición";
-        } 
-        else {
-          badge.innerText = "FUERZA";
-          badge.className = "absolute top-4 left-4 px-3 py-1 bg-violet-100 text-violet-700 rounded-full text-[10px] font-bold uppercase tracking-widest";
-          
-          const isA = (state.subPhase % 2 === 0);
-          currentEx = isA ? block.a : block.b;
-          title.innerText = currentEx;
-          subtitle.innerText = `Serie ${Math.floor(state.subPhase/2) + 1} de 2`;
-          typeIcon = isA ? block.aType : block.bType;
-          
-          // Next logic
-          if (state.subPhase < 3) {
-            next.innerText = isA ? block.b : block.a;
-          } else {
-            next.innerText = "Transición (Descanso)";
-          }
-
-          // Logger
-          logger.classList.remove('hide');
-          const lastLog = state.logs[currentEx];
-          document.getElementById('wo-last-record').innerText = lastLog ? `${lastLog[0].w} kg (${lastLog[0].r} reps)` : '--';
-          document.getElementById('wo-input-weight').value = '';
-          document.getElementById('wo-input-reps').value = '';
-        }
-      }
-
-      visual.innerHTML = getSVG(typeIcon);
-      updateTimerDisplay();
-    }
-
-    function updateTimerDisplay() {
-      const min = Math.floor(state.timeLeft / 60).toString().padStart(2, '0');
-      const sec = (state.timeLeft % 60).toString().padStart(2, '0');
-      document.getElementById('wo-timer').innerText = `${min}:${sec}`;
-    }
-
-    function confirmExit() {
-      if(confirm("¿Seguro que deseas salir del entrenamiento?")) {
-        clearInterval(state.timerId);
-        state.isRunning = false;
-        switchView('view-home');
-      }
-    }
-
-    /* ==========================================
-       AUDIO & LOGS
-       ========================================== */
-    function toggleSound() {
-      state.soundOn = !state.soundOn;
-      document.getElementById('btn-sound').innerText = state.soundOn ? '🔊' : '🔇';
-    }
-
-    function playBeep(freq, type, duration) {
-      if(!state.soundOn) return;
+    const playBeep = (freq = 440, type = 'sine', duration = 0.15) => {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (!AudioCtx) return;
@@ -620,129 +30,377 @@
         gain.connect(ctx.destination);
         osc.start();
         osc.stop(ctx.currentTime + duration);
-      } catch (e) {}
-    }
+      } catch (e) {
+        console.warn("Audio no disponible", e);
+      }
+    };
 
-    function saveCurrentLog() {
-      const w = document.getElementById('wo-input-weight').value;
-      const r = document.getElementById('wo-input-reps').value;
-      if(!w && !r) return;
-      
-      const ex = document.getElementById('wo-title').innerText;
-      if(!state.logs[ex]) state.logs[ex] = [];
-      
-      state.logs[ex].unshift({ d: new Date().toLocaleDateString(), w: w || '-', r: r || '-' });
-      localStorage.setItem('gym_logs', JSON.stringify(state.logs));
-      
-      document.getElementById('wo-last-record').innerText = `${w||'-'} kg (${r||'-'} reps)`;
-      document.getElementById('wo-input-weight').value = '';
-      document.getElementById('wo-input-reps').value = '';
-      
-      const btn = event.target;
-      btn.innerText = "¡Guardado!";
-      btn.classList.add('bg-emerald-500');
-      setTimeout(() => { btn.innerText = "✓"; btn.classList.remove('bg-emerald-500'); }, 1500);
-    }
+    const WARMUP_EXERCISES = [
+      { name: "Círculos de Brazos y Hombros", cue: "Movimiento amplio hacia adelante y hacia atrás." },
+      { name: "Rotaciones de Torso de Pie", cue: "Gira el tronco suavemente de lado a lado activando abdomen." },
+      { name: "Sentadilla Profunda con Pausa", cue: "Baja despacio sin peso y abre la cadera empujando rodillas." },
+      { name: "Gato - Vaca en Colchoneta", cue: "Arquea y redondea la columna vertebral coordinando aire." },
+      { name: "Puente Glúteo de Activación", cue: "Eleva pelvis despacio contrayendo glúteos 2 segundos." }
+    ];
 
-    /* ==========================================
-       VISTAS SECUNDARIAS
-       ========================================== */
-    function renderProgressionSelect() {
-      const sel = document.getElementById('prog-select');
-      sel.innerHTML = '<option value="">Selecciona un ejercicio...</option>';
-      const keys = Object.keys(state.logs).sort();
-      keys.forEach(k => {
-        const opt = document.createElement('option');
-        opt.value = k; opt.innerText = k;
-        sel.appendChild(opt);
+    const ROUTINES = {
+      lunes: {
+        name: "Lunes: Full Body",
+        blocks: [
+          { type: 'cardio', name: 'Cardio Bloque 1' },
+          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', cueA: 'Mancuerna al esternón, baja profundo.', exB: 'Flexiones en suelo', cueB: 'Cuerpo en tabla recta, codos a 45 grados.' },
+          { type: 'cardio', name: 'Cardio Bloque 2' },
+          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', cueA: 'Bisagra de cadera, empuja glúteos atrás.', exB: 'Press Militar Mancuernas', cueB: 'Empuje vertical estricto hacia arriba.' },
+          { type: 'cardio', name: 'Cardio Bloque 3' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Zancadas Alternas', cueA: 'Paso largo, torso erguido y control al bajar.', exB: 'Remo con Mancuernas', cueB: 'Espalda recta a 45°, codos pegados al cuerpo.' },
+          { type: 'cardio', name: 'Cardio Bloque 4' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo con Banda', cueA: 'Abre rodillas contra la banda y aprieta arriba.', exB: 'Curl Bíceps con Banda/Mancuerna', cueB: 'Codos pegados a los costados, sube controlado.' },
+          { type: 'cardio', name: 'Cardio Bloque 5' },
+          { type: 'fuerza', name: 'Fuerza 5', exA: 'Plancha Abdominal', cueA: 'Activa glúteos y ombligo hacia adentro.', exB: 'Hollow Hold Colchoneta', cueB: 'Zona lumbar completamente apoyada en el suelo.' },
+        ]
+      },
+      martes: {
+        name: "Martes: Piernas",
+        blocks: [
+          { type: 'cardio', name: 'Cardio Bloque 1' },
+          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', cueA: 'Baja profundo manteniendo pecho alto.', exB: 'Sentadilla Isométrica Pared', cueB: 'Muslos paralelos al suelo contra la pared.' },
+          { type: 'cardio', name: 'Cardio Bloque 2' },
+          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', cueA: 'Siente tensión en femorales e isquios.', exB: 'Elevación de Talones', cueB: 'Pausa 1 segundo arriba en puntas de pie.' },
+          { type: 'cardio', name: 'Cardio Bloque 3' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Zancada Búlgara Izq', cueA: 'Pie trasero elevado, baja vertical.', exB: 'Zancada Búlgara Der', cueB: 'Pie trasero elevado, baja vertical.' },
+          { type: 'cardio', name: 'Cardio Bloque 4' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo Pies Elevados', cueA: 'Pies sobre banco para mayor recorrido.', exB: 'Monster Walk con Banda', cueB: 'Pasos laterales en semi-sentadilla con banda.' },
+          { type: 'cardio', name: 'Cardio Bloque 5' },
+          { type: 'fuerza', name: 'Fuerza 5', exA: 'Sentadilla Sumo Mancuerna', cueA: 'Pies abiertos a 45 grados, baja vertical.', exB: 'Abductores con Banda Sentado', cueB: 'Abre rodillas fuerte contra la banda.' },
+        ]
+      },
+      miercoles: {
+        name: "Miércoles: Espalda + Tríceps + Hombros",
+        blocks: [
+          { type: 'cardio', name: 'Cardio Bloque 1' },
+          { type: 'fuerza', name: 'Fuerza 1', exA: 'Remo con Mancuernas', cueA: 'Tira con los codos hacia atrás.', exB: 'Fondos en Colchoneta/Banco', cueB: 'Flexiona codos a 90 grados y empuja.' },
+          { type: 'cardio', name: 'Cardio Bloque 2' },
+          { type: 'fuerza', name: 'Fuerza 2', exA: 'Floor Press Mancuernas', cueA: 'Toca suelo con tríceps y empuja arriba.', exB: 'Press Militar Mancuerna', cueB: 'Empuje vertical estricto sin impulso.' },
+          { type: 'cardio', name: 'Cardio Bloque 3' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Elevaciones Laterales', cueA: 'Sube hasta la altura de los hombros.', exB: 'Patada de Tríceps Mancuerna', cueB: 'Extiende el codo por completo hacia atrás.' },
+          { type: 'cardio', name: 'Cardio Bloque 4' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Pájaros (Deltoides Post)', cueA: 'Torso inclinado, abre brazos a los lados.', exB: 'Copa de Tríceps a 2 Manos', cueB: 'Codos cerrados apuntando hacia arriba.' },
+          { type: 'cardio', name: 'Cardio Bloque 5' },
+          { type: 'fuerza', name: 'Fuerza 5', exA: 'Plancha Abdominal', cueA: 'Contrae abdomen y glúteos firmemente.', exB: 'Flexiones en Suelo', cueB: 'Pecho cerca del suelo en cada bajada.' },
+        ]
+      },
+      jueves: {
+        name: "Jueves: Glúteos",
+        blocks: [
+          { type: 'cardio', name: 'Cardio Bloque 1' },
+          { type: 'fuerza', name: 'Fuerza 1', exA: 'Hip Thrust Colchoneta', cueA: 'Aprieta glúteos fuertemente arriba.', exB: 'Clamshell con Banda', cueB: 'Abre la rodilla superior sin rotar cadera.' },
+          { type: 'cardio', name: 'Cardio Bloque 2' },
+          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', cueA: 'Empuja glúteos atrás sintiendo el estiramiento.', exB: 'Patada Glúteo Cuadrupedia', cueB: 'Eleva la planta del pie hacia el techo.' },
+          { type: 'cardio', name: 'Cardio Bloque 3' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Puente a 1 Pierna Izq', cueA: 'Empuja solo con el talón izquierdo.', exB: 'Puente a 1 Pierna Der', cueB: 'Empuja solo con el talón derecho.' },
+          { type: 'cardio', name: 'Cardio Bloque 4' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Frog Pumps Mancuerna', cueA: 'Plantas juntas, sube cadera y aprieta.', exB: 'Abducciones con Banda Sentado', cueB: 'Abre rodillas con fuerza continua.' },
+          { type: 'cardio', name: 'Cardio Bloque 5' },
+          { type: 'fuerza', name: 'Fuerza 5', exA: 'Búlgara Foco Glúteo', cueA: 'Torso ligeramente inclinado al bajar.', exB: 'Caminata Lateral con Banda', cueB: 'Tensión constante en la banda elástica.' },
+        ]
+      },
+      viernes: {
+        name: "Viernes: Full Body (Énf. Inferior)",
+        blocks: [
+          { type: 'cardio', name: 'Cardio Bloque 1' },
+          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', cueA: 'Sentadilla profunda y controlada.', exB: 'Remo con Mancuernas', cueB: 'Junta escápulas en la parte alta.' },
+          { type: 'cardio', name: 'Cardio Bloque 2' },
+          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', cueA: 'Baja las mancuernas rozando las piernas.', exB: 'Floor Press Mancuernas', cueB: 'Empuje de pecho desde colchoneta.' },
+          { type: 'cardio', name: 'Cardio Bloque 3' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Step-ups / Subidas', cueA: 'Empuja con la pierna de arriba.', exB: 'Elevaciones Laterales', cueB: 'Controla la bajada en 2 segundos.' },
+          { type: 'cardio', name: 'Cardio Bloque 4' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo Banda', cueA: 'Abre rodillas al subir.', exB: 'Curl Bíceps Mancuerna', cueB: 'Contracción estricta sin balanceo.' },
+          { type: 'cardio', name: 'Cardio Bloque 5' },
+          { type: 'fuerza', name: 'Fuerza 5', exA: 'Zancadas Hacia Atrás', cueA: 'Paso atrás controlado.', exB: 'Plancha Abdominal', cueB: 'Glúteos y core bloqueados.' },
+        ]
+      }
+    };
+
+    function App() {
+      const [view, setView] = useState('home');
+      const [selectedDay, setSelectedDay] = useState('lunes');
+      const [cardioMachine, setCardioMachine] = useState('Caminadora');
+
+      const [weightHistory, setWeightHistory] = useState(() => {
+        try { return JSON.parse(localStorage.getItem('gym_weights') || '{}'); } catch(e) { return {}; }
       });
-      document.getElementById('prog-list').innerHTML = '';
-    }
-
-    function renderProgression() {
-      const ex = document.getElementById('prog-select').value;
-      const list = document.getElementById('prog-list');
-      list.innerHTML = '';
-      if(!ex || !state.logs[ex]) return;
-      
-      state.logs[ex].forEach(log => {
-        list.innerHTML += `
-          <div class="bg-white border border-slate-200 p-3 rounded-xl flex justify-between items-center shadow-sm">
-            <span class="text-xs font-bold text-slate-400">${log.d}</span>
-            <div class="text-right">
-              <span class="font-black text-slate-700 text-lg">${log.w} <span class="text-xs text-slate-400 font-medium">kg</span></span>
-              <span class="text-sm font-bold text-violet-600 ml-3">${log.r} <span class="text-[10px] uppercase">reps</span></span>
-            </div>
-          </div>`;
+      const [bodyMetrics, setBodyMetrics] = useState(() => {
+        try { return JSON.parse(localStorage.getItem('gym_body_metrics') || '[]'); } catch(e) { return []; }
       });
-    }
 
-    function saveMeasurement() {
-      const m = {
-        d: new Date().toLocaleDateString(),
-        p: document.getElementById('m-peso').value,
-        c: document.getElementById('m-cintura').value,
-        ca: document.getElementById('m-cadera').value,
-        b: document.getElementById('m-brazo').value,
-        mu: document.getElementById('m-muslo').value
+      const updateExerciseWeight = (exerciseName, weight) => {
+        const updated = {
+          ...weightHistory,
+          [exerciseName]: {
+            lastWeight: weight,
+            history: [...(weightHistory[exerciseName]?.history || []), { weight, date: new Date().toLocaleDateString() }]
+          }
+        };
+        setWeightHistory(updated);
+        try { localStorage.setItem('gym_weights', JSON.stringify(updated)); } catch(e){}
       };
-      if(!m.p && !m.c) return;
-      state.measurements.unshift(m);
-      localStorage.setItem('gym_metrics', JSON.stringify(state.measurements));
-      
-      ['m-peso','m-cintura','m-cadera','m-brazo','m-muslo'].forEach(id => document.getElementById(id).value = '');
-      renderMeasurements();
+
+      const addBodyMetric = (metric) => {
+        const updated = [{ ...metric, id: Date.now(), date: new Date().toLocaleDateString() }, ...bodyMetrics];
+        setBodyMetrics(updated);
+        try { localStorage.setItem('gym_body_metrics', JSON.stringify(updated)); } catch(e){}
+      };
+
+      return (
+        <div className="max-w-md mx-auto min-h-screen flex flex-col justify-between p-4">
+          {view === 'home' && (
+            <HomeView 
+              selectedDay={selectedDay} 
+              setSelectedDay={setSelectedDay}
+              cardioMachine={cardioMachine}
+              setCardioMachine={setCardioMachine}
+              onStartWorkout={() => setView('workout')}
+              onGoMetrics={() => setView('metrics')}
+            />
+          )}
+
+          {view === 'workout' && (
+            <WorkoutView 
+              routine={ROUTINES[selectedDay]} 
+              selectedDay={selectedDay}
+              cardioMachine={cardioMachine}
+              weightHistory={weightHistory}
+              onSaveWeight={updateExerciseWeight}
+              onFinish={() => setView('home')}
+            />
+          )}
+
+          {view === 'metrics' && (
+            <MetricsView 
+              metrics={bodyMetrics} 
+              onAddMetric={addBodyMetric} 
+              onBack={() => setView('home')} 
+            />
+          )}
+        </div>
+      );
     }
 
-    function renderMeasurements() {
-      const list = document.getElementById('meas-list');
-      list.innerHTML = '';
-      if(state.measurements.length === 0) {
-        list.innerHTML = '<div class="text-center text-slate-400 text-sm mt-10">No hay medidas registradas</div>';
-        return;
-      }
-      state.measurements.forEach(m => {
-        list.innerHTML += `
-          <div class="bg-white border border-slate-200 p-3 rounded-xl shadow-sm space-y-2">
-            <div class="text-xs font-black text-violet-500 mb-1 border-b border-slate-100 pb-1">${m.d}</div>
-            <div class="grid grid-cols-3 gap-2 text-xs">
-              ${m.p ? `<div><span class="text-slate-400">Peso:</span> <b class="text-slate-700">${m.p}kg</b></div>` : ''}
-              ${m.c ? `<div><span class="text-slate-400">Cintura:</span> <b class="text-slate-700">${m.c}cm</b></div>` : ''}
-              ${m.ca ? `<div><span class="text-slate-400">Cadera:</span> <b class="text-slate-700">${m.ca}cm</b></div>` : ''}
-              ${m.b ? `<div><span class="text-slate-400">Brazo:</span> <b class="text-slate-700">${m.b}cm</b></div>` : ''}
-              ${m.mu ? `<div><span class="text-slate-400">Muslo:</span> <b class="text-slate-700">${m.mu}cm</b></div>` : ''}
+    function HomeView({ selectedDay, setSelectedDay, cardioMachine, setCardioMachine, onStartWorkout, onGoMetrics }) {
+      const days = [
+        { key: 'lunes', label: 'Lunes', desc: 'Full body' },
+        { key: 'martes', label: 'Martes', desc: 'Piernas' },
+        { key: 'miercoles', label: 'Miércoles', desc: 'Espalda + Hombros + Tríceps' },
+        { key: 'jueves', label: 'Jueves', desc: 'Glúteos' },
+        { key: 'viernes', label: 'Viernes', desc: 'Full body (Enf. Inferior)' }
+      ];
+      const machines = ['Caminadora', 'Bicicleta elíptica', 'Bicicleta estática'];
+
+      return (
+        <div className="flex flex-col space-y-5 pt-2">
+          <div>
+            <h1 className="text-2xl font-black text-white tracking-tight">MI ENTRENAMIENTO</h1>
+            <p className="text-slate-400 text-xs">5 min calentamiento + 10 bloques</p>
+          </div>
+
+          <div className="space-y-2">
+            <span className="text-[11px] uppercase font-bold text-slate-400 tracking-wider">Día</span>
+            <div className="grid grid-cols-1 gap-2">
+              {days.map(d => (
+                <button
+                  key={d.key}
+                  onClick={() => setSelectedDay(d.key)}
+                  className={`p-3 rounded-xl border text-left flex justify-between items-center transition ${
+                    selectedDay === d.key 
+                      ? 'bg-blue-600/20 border-blue-500 text-blue-200' 
+                      : 'bg-slate-900 border-slate-800 text-slate-300'
+                  }`}
+                >
+                  <div>
+                    <div className="font-bold text-sm">{d.label}</div>
+                    <div className="text-[11px] opacity-70">{d.desc}</div>
+                  </div>
+                  {selectedDay === d.key && <span className="text-blue-400 font-bold">✓</span>}
+                </button>
+              ))}
             </div>
-          </div>`;
-      });
+          </div>
+
+          <div className="space-y-2">
+            <span className="text-[11px] uppercase font-bold text-slate-400 tracking-wider">Máquina de Cardio</span>
+            <div className="grid grid-cols-3 gap-2">
+              {machines.map(m => (
+                <button
+                  key={m}
+                  onClick={() => setCardioMachine(m)}
+                  className={`p-2.5 rounded-xl border text-[11px] font-semibold text-center transition ${
+                    cardioMachine === m 
+                      ? 'bg-emerald-600/20 border-emerald-500 text-emerald-300' 
+                      : 'bg-slate-900 border-slate-800 text-slate-400'
+                  }`}
+                >
+                  {m.replace('Bicicleta ', 'Bici ')}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2 pt-2">
+            <button
+              onClick={onStartWorkout}
+              className="w-full h-14 bg-blue-600 active:scale-95 rounded-2xl font-black text-base uppercase tracking-wider text-white shadow-lg shadow-blue-900/40 transition"
+            >
+              Comenzar Entrenamiento
+            </button>
+            <button
+              onClick={onGoMetrics}
+              className="w-full h-11 bg-slate-900 border border-slate-800 rounded-xl text-slate-300 font-semibold text-xs active:bg-slate-800 transition"
+            >
+              Ver / Registrar Medidas
+            </button>
+          </div>
+        </div>
+      );
     }
 
-    function exportData() {
-      const data = { logs: state.logs, measurements: state.measurements };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `entrenamiento_${new Date().toISOString().split('T')[0]}.json`;
-      a.click();
-    }
+    function WorkoutView({ routine, selectedDay, cardioMachine, weightHistory, onSaveWeight, onFinish }) {
+      const [isWarmup, setIsWarmup] = useState(true);
+      const [warmupIdx, setWarmupIdx] = useState(0);
 
-    /* ==========================================
-       DIBUJOS SVG (Esquemáticos, livianos y visuales)
-       ========================================== */
-    function getSVG(type) {
-      const base = 'class="icon-svg" viewBox="0 0 100 100"';
-      switch(type) {
-        case 'squat': return `<svg ${base} stroke="#8b5cf6"><circle cx="50" cy="25" r="6"/><path d="M50 31v25M50 56l-15 10M50 56l15 10M35 66l-5 20M65 66l5 20"/><rect x="42" y="40" width="16" height="8" rx="2" fill="#ede9fe" stroke="#8b5cf6"/></svg>`;
-        case 'hinge': return `<svg ${base} stroke="#8b5cf6"><circle cx="40" cy="25" r="6"/><path d="M42 31l15 20M57 51l-10 20M47 71l5 15M50 40v30"/><rect x="46" y="70" width="8" height="12" rx="2" fill="#ede9fe" stroke="#8b5cf6"/></svg>`;
-        case 'bridge': return `<svg ${base} stroke="#8b5cf6"><line x1="10" y1="85" x2="90" y2="85" stroke="#cbd5e1"/><circle cx="25" cy="79" r="6"/><path d="M29 81l25-25l15 10l-5 19"/></svg>`;
-        case 'push': return `<svg ${base} stroke="#8b5cf6"><line x1="10" y1="80" x2="90" y2="80" stroke="#cbd5e1"/><circle cx="75" cy="50" r="6"/><path d="M69 54L30 68M60 58l-5 12l-5 10"/></svg>`;
-        case 'pull': return `<svg ${base} stroke="#8b5cf6"><circle cx="40" cy="25" r="6"/><path d="M45 30l15 20l-5 20l5 15M50 40l-10 10l15-5"/><rect x="52" y="42" width="12" height="6" rx="2" fill="#ede9fe" stroke="#8b5cf6"/></svg>`;
-        case 'core': return `<svg ${base} stroke="#8b5cf6"><line x1="10" y1="85" x2="90" y2="85" stroke="#cbd5e1"/><circle cx="50" cy="80" r="5"/><path d="M45 80l-20-10M55 80l20-10M35 70l-5-15M65 70l5-15M50 80v-25M50 55l-10-15M50 55l10-15"/></svg>`;
-        case 'cardio': return `<svg ${base} stroke="#0ea5e9"><circle cx="65" cy="25" r="6"/><path d="M60 30L45 50l15 10l10 20M45 50l-15 15l-10-2M50 40l15 5l10-5"/><line x1="20" y1="90" x2="90" y2="90" stroke="#cbd5e1"/></svg>`;
-        case 'warmup': default: return `<svg ${base} stroke="#f59e0b"><circle cx="50" cy="30" r="6"/><path d="M50 36v30M50 45c-15-5-20-15-20-15M50 45c15-5 20-15 20-15M50 66l-15 20M50 66l15 20"/></svg>`;
+      const [blockIdx, setBlockIdx] = useState(0);
+      const [subPhase, setSubPhase] = useState(0);
+      const [isRest, setIsRest] = useState(false);
+      const [timeLeft, setTimeLeft] = useState(60);
+      const [running, setRunning] = useState(false);
+      const [totalSecs, setTotalSecs] = useState(0);
+      const [currentWeightInput, setCurrentWeightInput] = useState('');
+
+      const currentBlock = routine.blocks[blockIdx];
+
+      const nextStep = () => {
+        if (isWarmup) {
+          if (warmupIdx < 4) {
+            setWarmupIdx(w => w + 1);
+            setTimeLeft(60);
+          } else {
+            setIsWarmup(false);
+            setIsRest(true);
+            setTimeLeft(60);
+          }
+          return;
+        }
+
+        if (isRest) {
+          setIsRest(false);
+          setSubPhase(0);
+          const nextB = routine.blocks[blockIdx];
+          setTimeLeft(nextB.type === 'cardio' ? 240 : 60);
+          return;
+        }
+
+        if (currentBlock.type === 'cardio') {
+          if (blockIdx + 1 < routine.blocks.length) {
+            setBlockIdx(b => b + 1);
+            setIsRest(true);
+            setTimeLeft(60);
+          } else {
+            alert('¡Entrenamiento completado!');
+            onFinish();
+          }
+          return;
+        }
+
+        if (currentBlock.type === 'fuerza') {
+          if (subPhase < 3) {
+            setSubPhase(s => s + 1);
+            setTimeLeft(60);
+          } else {
+            if (blockIdx + 1 < routine.blocks.length) {
+              setBlockIdx(b => b + 1);
+              setIsRest(true);
+              setTimeLeft(60);
+            } else {
+              alert('¡Entrenamiento completado!');
+              onFinish();
+            }
+          }
+        }
+      };
+
+      useEffect(() => {
+        let t = null;
+        if (running) {
+          t = setInterval(() => {
+            setTotalSecs(s => s + 1);
+            setTimeLeft(prev => {
+              if (prev <= 4 && prev > 1) playBeep(440, 'sine', 0.1);
+              if (prev === 1) {
+                playBeep(880, 'triangle', 0.35);
+                nextStep();
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        }
+        return () => clearInterval(t);
+      }, [running, isWarmup, warmupIdx, isRest, blockIdx, subPhase]);
+
+      const formatTime = (s) => {
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+      };
+
+      let title = "";
+      let subtitle = "";
+      let imgNumber = "";
+
+      if (isWarmup) {
+        title = WARMUP_EXERCISES[warmupIdx].name;
+        subtitle = WARMUP_EXERCISES[warmupIdx].cue;
+        imgNumber = warmupIdx < 3 ? "1" : "2"; // Panel 1 o 2
+      } else if (isRest) {
+        title = "Descanso / Transición";
+        subtitle = "Respira y prepárate para el siguiente bloque.";
+      } else if (currentBlock.type === 'cardio') {
+        title = `${cardioMachine} (Cardio)`;
+        subtitle = "Ritmo moderado constante durante 4 minutos.";
+      } else {
+        const isA = subPhase % 2 === 0;
+        title = isA ? currentBlock.exA : currentBlock.exB;
+        subtitle = isA ? currentBlock.cueA : currentBlock.cueB;
+        
+        // Asignación de imagen según el bloque de fuerza
+        if (blockIdx === 1) imgNumber = "3";
+        else if (blockIdx === 3) imgNumber = "4";
+        else if (blockIdx === 5) imgNumber = "5";
+        else if (blockIdx === 7) imgNumber = "6";
+        else if (blockIdx === 9) imgNumber = "7";
       }
-    }
 
-  </script>
-</body>
-</html>
+      // Concatena ej: "lunes 1.jpg"
+      const mediaSrc = imgNumber ? `${selectedDay} ${imgNumber}.jpg` : "";
+      const lastRecorded = weightHistory[title]?.lastWeight;
+
+      return (
+        <div className="flex flex-col min-h-[92vh] justify-between">
+          <div className="flex justify-between items-center bg-slate-900 border border-slate-800 p-3 rounded-xl">
+            <button onClick={onFinish} className="text-xs text-red-400 font-bold uppercase">✕ Salir</button>
+            <span className="font-mono text-xs text-slate-400">Total: {formatTime(totalSecs)}</span>
+            <span className="text-xs font-bold text-blue-400">
+              {isWarmup ? `Calentamiento ${warmupIdx + 1}/5` : `Bloque ${blockIdx + 1}/10`}
+            </span>
+          </div>
+
+          <div className="text-center my-auto space-y-2 py-4 flex flex-col items-center">
+            <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+              isWarmup ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
+              isRest ? 'bg-amber-500/20 text-amber-300' :
+              currentBlock.type === 'cardio' ? 'bg-emerald-500/20 text-emerald-300' :
+              'bg-blue-500/20 text-blue-300'
+            }`}>
+              {isWarmup ? 'Movilidad y Activación' : isRest ? 'Transición' : currentBlock.type}
+            </span>
+
+            {/* AQUI SE CAR
