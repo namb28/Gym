@@ -15,7 +15,7 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // Generador de sonidos con Web Audio API
+    // Generador de audio nativo Web Audio API
     const playBeep = (freq = 440, type = 'sine', duration = 0.15) => {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -36,134 +36,213 @@
       }
     };
 
-    // Biblioteca de animaciones en bucle (GIFs / Videos demostrativos optimizados)
-    const EXERCISE_MEDIA = {
-      // Calentamiento
-      circulos_brazos: "https://images.squarespace-cdn.com/content/v1/5dd51877478dd3231eb93a89/1574635815664-L12G94D85MCHYDRC4W0J/arm-circles.gif",
-      rotacion_torso: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Standing-Torso-Twist.gif",
-      sentadilla_pausa: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Squat-Hold.gif",
-      gato_vaca: "https://fitnessprogramer.com/wp-content/uploads/2021/05/Cat-Cow-Pose.gif",
-      puente_activacion: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Glute-Bridge.gif",
+    // Ilustraciones Anatómicas Claras Integradas (Sin dependencias externas)
+    const ExerciseVisual = ({ type }) => {
+      switch (type) {
+        case 'squat': // Sentadilla profunda / Goblet
+          return (
+            <svg viewBox="0 0 160 120" className="w-full h-full stroke-blue-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+              <text x="15" y="18" fill="#94a3b8" fontSize="10" stroke="none" fontWeight="bold">INICIO</text>
+              <circle cx="35" cy="30" r="7" className="fill-blue-500/20" />
+              <path d="M 35 37 L 35 68" />
+              <rect x="31" y="44" width="8" height="12" rx="2" className="fill-blue-500 stroke-blue-300" />
+              <path d="M 35 68 L 26 95 M 35 68 L 44 95" />
+              <path d="M 22 95 L 28 95 M 42 95 L 48 95" />
 
-      // Piernas y Glúteos
-      sentadilla_goblet: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Goblet-Squat.gif",
-      peso_muerto_rumano: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Romanian-Deadlift.gif",
-      zancadas_alternas: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lunge.gif",
-      zancada_bulgara: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Bulgarian-Split-Squat.gif",
-      sentadilla_sumo: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Sumo-Squat.gif",
-      puente_gluteo_banda: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Glute-Bridge.gif",
-      hip_thrust: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Hip-Thrust.gif",
-      clamshell: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Clamshell.gif",
-      patada_gluteo: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Donkey-Kicks.gif",
-      frog_pumps: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Frog-Pumps.gif",
-      abduccion_banda: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Seated-Resistance-Band-Abduction.gif",
-      caminata_lateral: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Resistance-Band-Lateral-Walk.gif",
-      gemelos: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Calf-Raise.gif",
-      step_ups: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Step-up.gif",
+              <path d="M 68 55 L 82 55" stroke="#38bdf8" strokeDasharray="3,3" />
+              <polygon points="84,55 79,52 79,58" fill="#38bdf8" stroke="none" />
 
-      // Tren Superior y Core
-      flexiones: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Push-Up.gif",
-      press_militar: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif",
-      remo_mancuernas: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Bent-Over-Dumbbell-Row.gif",
-      curl_biceps: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Curl.gif",
-      plancha: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Plank.gif",
-      hollow_hold: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Hollow-Body-Hold.gif",
-      fondos: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Bench-Dips.gif",
-      elevaciones_laterales: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif",
-      patada_triceps: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Kickback.gif",
-      copa_triceps: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Overhead-Triceps-Extension.gif",
-      pajaros: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Rear-Delt-Fly.gif",
-      floor_press: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Floor-Press.gif",
+              <text x="100" y="18" fill="#38bdf8" fontSize="10" stroke="none" fontWeight="bold">PROFUNDIDAD</text>
+              <circle cx="125" cy="45" r="7" className="fill-blue-500/20" />
+              <path d="M 125 52 L 122 75" />
+              <rect x="126" y="58" width="8" height="12" rx="2" className="fill-blue-500 stroke-blue-300" />
+              <path d="M 122 75 L 102 76 L 104 100" />
+              <path d="M 122 75 L 140 76 L 138 100" />
+              <path d="M 98 100 L 106 100 M 134 100 L 142 100" />
+            </svg>
+          );
 
-      // Cardio y Descanso
-      cardio_caminadora: "https://images.squarespace-cdn.com/content/v1/5dd51877478dd3231eb93a89/1574635815664-L12G94D85MCHYDRC4W0J/treadmill.gif",
-      cardio_bici: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Stationary-Bike.gif",
-      descanso: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Deep-Breathing.gif"
+        case 'deadlift': // Peso Muerto Rumano (Bisagra de cadera)
+          return (
+            <svg viewBox="0 0 160 120" className="w-full h-full stroke-emerald-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+              <text x="15" y="18" fill="#94a3b8" fontSize="10" stroke="none" fontWeight="bold">ERbandwidthIDO</text>
+              <circle cx="35" cy="30" r="7" className="fill-emerald-500/20" />
+              <path d="M 35 37 L 35 70 L 35 100" />
+              <path d="M 35 44 L 28 65" />
+              <rect x="24" y="65" width="8" height="10" rx="2" className="fill-emerald-500 stroke-emerald-300" />
+              <path d="M 30 100 L 38 100" />
+
+              <path d="M 65 55 L 80 55" stroke="#34d399" strokeDasharray="3,3" />
+              <polygon points="82,55 77,52 77,58" fill="#34d399" stroke="none" />
+
+              <text x="95" y="18" fill="#34d399" fontSize="10" stroke="none" fontWeight="bold">BISAGRA CADERA</text>
+              <circle cx="100" cy="42" r="7" className="fill-emerald-500/20" />
+              <path d="M 105 47 L 130 65" />
+              <path d="M 112 52 L 112 80" />
+              <rect x="108" y="80" width="8" height="10" rx="2" className="fill-emerald-500 stroke-emerald-300" />
+              <path d="M 130 65 L 126 84 L 122 100" />
+              <path d="M 116 100 L 126 100" />
+            </svg>
+          );
+
+        case 'bridge': // Hip Thrust / Puente de glúteo
+          return (
+            <svg viewBox="0 0 160 120" className="w-full h-full stroke-purple-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+              <line x1="10" y1="100" x2="150" y2="100" className="stroke-slate-700 stroke-1" />
+              <text x="35" y="25" fill="#c084fc" fontSize="10" stroke="none" fontWeight="bold">CONTRACCIÓN ARRIBA</text>
+              <circle cx="35" cy="92" r="7" className="fill-purple-500/20" />
+              <path d="M 42 94 L 80 62" />
+              <ellipse cx="88" cy="68" rx="5" ry="9" className="stroke-pink-400 fill-pink-500/30" />
+              <path d="M 80 62 L 105 66 L 102 98" />
+              <path d="M 98 98 L 108 98" />
+              <path d="M 78 50 L 78 36" stroke="#c084fc" strokeDasharray="3,3" />
+              <polygon points="78,34 75,39 81,39" fill="#c084fc" stroke="none" />
+            </svg>
+          );
+
+        case 'row': // Remo con mancuernas
+          return (
+            <svg viewBox="0 0 160 120" className="w-full h-full stroke-amber-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+              <text x="30" y="22" fill="#fbbf24" fontSize="10" stroke="none" fontWeight="bold">TRACCIÓN DE CODO</text>
+              <circle cx="50" cy="40" r="7" className="fill-amber-500/20" />
+              <path d="M 55 45 L 85 65" />
+              <path d="M 85 65 L 82 84 L 78 102" />
+              <path d="M 72 102 L 82 102" />
+              <path d="M 65 52 L 68 75 L 75 58" />
+              <rect x="70" y="52" width="10" height="8" rx="2" className="fill-amber-500 stroke-amber-300" />
+              <path d="M 68 72 L 74 60" stroke="#f59e0b" strokeWidth="2" />
+            </svg>
+          );
+
+        case 'push': // Flexiones / Push-ups / Plancha
+          return (
+            <svg viewBox="0 0 160 120" className="w-full h-full stroke-cyan-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+              <line x1="10" y1="95" x2="150" y2="95" className="stroke-slate-700 stroke-1" />
+              <text x="35" y="25" fill="#22d3ee" fontSize="10" stroke="none" fontWeight="bold">ALINEACIÓN NEUTRA</text>
+              <circle cx="120" cy="58" r="7" className="fill-cyan-500/20" />
+              <path d="M 115 64 L 40 85" />
+              <path d="M 100 68 L 96 82 L 94 95" />
+              <circle cx="38" cy="88" r="3" className="fill-cyan-400" />
+            </svg>
+          );
+
+        case 'warmup': // Calentamiento y movilidad articular
+          return (
+            <svg viewBox="0 0 160 120" className="w-full h-full stroke-yellow-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+              <text x="35" y="20" fill="#facc15" fontSize="10" stroke="none" fontWeight="bold">MOVILIDAD ACTIVA</text>
+              <circle cx="80" cy="38" r="7" className="fill-yellow-500/20" />
+              <path d="M 80 45 L 80 75" />
+              <path d="M 80 54 L 54 42 M 80 54 L 106 42" />
+              <path d="M 80 75 L 65 102 M 80 75 L 95 102" />
+              <path d="M 45 42 C 45 28, 115 28, 115 42" stroke="#facc15" strokeDasharray="3,3" />
+            </svg>
+          );
+
+        case 'cardio': // Cardio (Caminadora / Bicicleta)
+          return (
+            <svg viewBox="0 0 160 120" className="w-full h-full stroke-emerald-400 fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+              <text x="35" y="20" fill="#34d399" fontSize="10" stroke="none" fontWeight="bold">RITMO CARDIO CONSTANTE</text>
+              <circle cx="95" cy="36" r="7" className="fill-emerald-500/20" />
+              <path d="M 90 42 L 75 65 L 90 74 L 105 100" />
+              <path d="M 75 65 L 58 78 L 48 76" />
+              <path d="M 80 52 L 102 58 L 115 54" />
+              <line x1="20" y1="102" x2="140" y2="102" className="stroke-slate-700 stroke-2" />
+            </svg>
+          );
+
+        default:
+          return (
+            <svg viewBox="0 0 160 120" className="w-full h-full stroke-slate-400 fill-none stroke-2">
+              <circle cx="80" cy="40" r="8" />
+              <path d="M 80 48 L 80 80 L 68 105 M 80 80 L 92 105" />
+            </svg>
+          );
+      }
     };
 
     // 5 Minutos de Calentamiento Inicial Guiado
     const WARMUP_EXERCISES = [
-      { name: "Círculos de Brazos y Hombros", cue: "Movimiento amplio hacia adelante y hacia atrás activando escápulas.", media: EXERCISE_MEDIA.circulos_brazos },
-      { name: "Rotaciones de Torso de Pie", cue: "Gira el tronco suavemente de lado a lado manteniendo la cadera firme.", media: EXERCISE_MEDIA.rotacion_torso },
-      { name: "Sentadilla Profunda con Pausa", cue: "Baja despacio sin peso y abre la cadera empujando rodillas hacia afuera.", media: EXERCISE_MEDIA.sentadilla_pausa },
-      { name: "Gato - Vaca en Colchoneta", cue: "Arquea y redondea la columna vertebral coordinando con tu respiración.", media: EXERCISE_MEDIA.gato_vaca },
-      { name: "Puente Glúteo de Activación", cue: "Eleva la pelvis contrayendo los glúteos 2 segundos en el punto alto.", media: EXERCISE_MEDIA.puente_activacion }
+      { name: "Círculos de Brazos y Hombros", cue: "Movimiento amplio circular activando escápulas y deltoides.", icon: "warmup" },
+      { name: "Rotaciones de Torso de Pie", cue: "Gira el tronco suavemente manteniendo la cadera al frente.", icon: "warmup" },
+      { name: "Sentadilla Profunda con Pausa", cue: "Baja despacio sin peso y abre la cadera empujando rodillas.", icon: "squat" },
+      { name: "Gato - Vaca en Colchoneta", cue: "Arquea y redondea la columna vertebral coordinando respiración.", icon: "push" },
+      { name: "Puente Glúteo de Activación", cue: "Eleva pelvis y contrae fuerte los glúteos 2 seg en el tope.", icon: "bridge" }
     ];
 
     const ROUTINES = {
       lunes: {
         name: "Lunes: Full Body",
         blocks: [
-          { type: 'cardio', name: 'Cardio Bloque 1' },
-          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', mediaA: EXERCISE_MEDIA.sentadilla_goblet, cueA: 'Mancuerna pegada al esternón y codos adentro.', exB: 'Flexiones en suelo', mediaB: EXERCISE_MEDIA.flexiones, cueB: 'Cuerpo en tabla recta, codos a 45 grados.' },
-          { type: 'cardio', name: 'Cardio Bloque 2' },
-          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', mediaA: EXERCISE_MEDIA.peso_muerto_rumano, cueA: 'Bisagra de cadera, empuja los glúteos hacia atrás.', exB: 'Press Militar Mancuernas', mediaB: EXERCISE_MEDIA.press_militar, cueB: 'Empuja hacia arriba sin arquear la zona lumbar.' },
-          { type: 'cardio', name: 'Cardio Bloque 3' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Zancadas Alternas', mediaA: EXERCISE_MEDIA.zancadas_alternas, cueA: 'Paso largo, torso erguido y rodilla rozando el suelo.', exB: 'Remo con Mancuernas', mediaB: EXERCISE_MEDIA.remo_mancuernas, cueB: 'Espalda recta a 45°, codos pegados al cuerpo.' },
-          { type: 'cardio', name: 'Cardio Bloque 4' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo con Banda', mediaA: EXERCISE_MEDIA.puente_gluteo_banda, cueA: 'Abre rodillas contra la banda y aprieta arriba.', exB: 'Curl Bíceps con Mancuerna/Banda', mediaB: EXERCISE_MEDIA.curl_biceps, cueB: 'Codos fijos a los costados, sube controlado.' },
-          { type: 'cardio', name: 'Cardio Bloque 5' },
-          { type: 'fuerza', name: 'Fuerza 5', exA: 'Plancha Abdominal', mediaA: EXERCISE_MEDIA.plancha, cueA: 'Aprieta glúteos y ombligo hacia la columna.', exB: 'Hollow Hold Colchoneta', mediaB: EXERCISE_MEDIA.hollow_hold, cueB: 'Zona lumbar completamente apoyada en el suelo.' },
+          { type: 'cardio', name: 'Cardio Bloque 1', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', iconA: 'squat', cueA: 'Mancuerna al esternón, baja profundo.', exB: 'Flexiones en suelo', iconB: 'push', cueB: 'Cuerpo en tabla recta, codos a 45 grados.' },
+          { type: 'cardio', name: 'Cardio Bloque 2', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', iconA: 'deadlift', cueA: 'Bisagra de cadera, empuja glúteos atrás.', exB: 'Press Militar Mancuernas', iconB: 'warmup', cueB: 'Empuje vertical estricto sin arquear lumbar.' },
+          { type: 'cardio', name: 'Cardio Bloque 3', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Zancadas Alternas', iconA: 'squat', cueA: 'Paso largo, torso erguido y control en la bajada.', exB: 'Remo con Mancuernas', iconB: 'row', cueB: 'Espalda recta a 45°, tira codos hacia la cadera.' },
+          { type: 'cardio', name: 'Cardio Bloque 4', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo con Banda', iconA: 'bridge', cueA: 'Abre rodillas contra la banda y aprieta glúteo.', exB: 'Curl Bíceps con Banda/Mancuerna', iconB: 'row', cueB: 'Codos pegados a los costados, sube controlado.' },
+          { type: 'cardio', name: 'Cardio Bloque 5', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 5', exA: 'Plancha Abdominal', iconA: 'push', cueA: 'Activa glúteos y ombligo hacia adentro.', exB: 'Hollow Hold Colchoneta', iconB: 'push', cueB: 'Zona lumbar completamente apoyada en el suelo.' },
         ]
       },
       martes: {
         name: "Martes: Piernas",
         blocks: [
-          { type: 'cardio', name: 'Cardio Bloque 1' },
-          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', mediaA: EXERCISE_MEDIA.sentadilla_goblet, cueA: 'Baja profundo manteniendo el pecho alto.', exB: 'Sentadilla Isométrica Pared', mediaB: EXERCISE_MEDIA.sentadilla_pausa, cueB: 'Muslos paralelos al suelo, espalda pegada a la pared.' },
-          { type: 'cardio', name: 'Cardio Bloque 2' },
-          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', mediaA: EXERCISE_MEDIA.peso_muerto_rumano, cueA: 'Siente la tensión en femorales e isquiotibiales.', exB: 'Elevación de Talones', mediaB: EXERCISE_MEDIA.gemelos, cueB: 'Pausa 1 segundo arriba en puntas de pie.' },
-          { type: 'cardio', name: 'Cardio Bloque 3' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Zancada Búlgara Izq', mediaA: EXERCISE_MEDIA.zancada_bulgara, cueA: 'Pie trasero elevado, baja verticalmente.', exB: 'Zancada Búlgara Der', mediaB: EXERCISE_MEDIA.zancada_bulgara, cueB: 'Pie trasero elevado, baja verticalmente.' },
-          { type: 'cardio', name: 'Cardio Bloque 4' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo Pies Elevados', mediaA: EXERCISE_MEDIA.puente_gluteo_banda, cueA: 'Pies sobre banco/escalón para mayor rango.', exB: 'Monster Walk con Banda', mediaB: EXERCISE_MEDIA.caminata_lateral, cueB: 'Semi-sentadilla con tensión constante en la banda.' },
-          { type: 'cardio', name: 'Cardio Bloque 5' },
-          { type: 'fuerza', name: 'Fuerza 5', exA: 'Sentadilla Sumo Mancuerna', mediaA: EXERCISE_MEDIA.sentadilla_sumo, cueA: 'Pies abiertos a 45 grados, énfasis en aductores.', exB: 'Abductores con Banda Sentado', mediaB: EXERCISE_MEDIA.abduccion_banda, cueB: 'Abre rodillas con fuerza contra la resistencia.' },
+          { type: 'cardio', name: 'Cardio Bloque 1', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', iconA: 'squat', cueA: 'Baja profundo manteniendo el pecho alto.', exB: 'Sentadilla Isométrica Pared', iconB: 'squat', cueB: 'Muslos paralelos al suelo contra la pared.' },
+          { type: 'cardio', name: 'Cardio Bloque 2', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', iconA: 'deadlift', cueA: 'Siente la tensión en femorales e isquios.', exB: 'Elevación de Talones', iconB: 'squat', cueB: 'Pausa 1 segundo arriba en puntas de pie.' },
+          { type: 'cardio', name: 'Cardio Bloque 3', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Zancada Búlgara Izq', iconA: 'squat', cueA: 'Pie trasero elevado, baja vertical.', exB: 'Zancada Búlgara Der', iconB: 'squat', cueB: 'Pie trasero elevado, baja vertical.' },
+          { type: 'cardio', name: 'Cardio Bloque 4', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo Pies Elevados', iconA: 'bridge', cueA: 'Pies sobre banco para mayor recorrido.', exB: 'Monster Walk con Banda', iconB: 'squat', cueB: 'Pasos laterales en semi-sentadilla con banda.' },
+          { type: 'cardio', name: 'Cardio Bloque 5', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 5', exA: 'Sentadilla Sumo Mancuerna', iconA: 'squat', cueA: 'Pies abiertos a 45 grados, baja vertical.', exB: 'Abductores con Banda Sentado', iconB: 'bridge', cueB: 'Abre rodillas fuerte contra la banda.' },
         ]
       },
       miercoles: {
         name: "Miércoles: Espalda + Tríceps + Hombros",
         blocks: [
-          { type: 'cardio', name: 'Cardio Bloque 1' },
-          { type: 'fuerza', name: 'Fuerza 1', exA: 'Remo con Mancuernas', mediaA: EXERCISE_MEDIA.remo_mancuernas, cueA: 'Tira con los codos hacia la cadera.', exB: 'Fondos en Colchoneta/Banco', mediaB: EXERCISE_MEDIA.fondos, cueB: 'Baja flexionando codos a 90 grados.' },
-          { type: 'cardio', name: 'Cardio Bloque 2' },
-          { type: 'fuerza', name: 'Fuerza 2', exA: 'Floor Press Mancuernas', mediaA: EXERCISE_MEDIA.floor_press, cueA: 'Apoya los tríceps en el suelo antes de empujar.', exB: 'Press Militar Mancuerna', mediaB: EXERCISE_MEDIA.press_militar, cueB: 'Empuje vertical estricto sin impulso de piernas.' },
-          { type: 'cardio', name: 'Cardio Bloque 3' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Elevaciones Laterales', mediaA: EXERCISE_MEDIA.elevaciones_laterales, cueA: 'Sube las mancuernas hasta la altura del hombro.', exB: 'Patada de Tríceps Mancuerna', mediaB: EXERCISE_MEDIA.patada_triceps, cueB: 'Extensión completa de codo en la parte final.' },
-          { type: 'cardio', name: 'Cardio Bloque 4' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Pájaros (Deltoides Post)', mediaA: EXERCISE_MEDIA.pajaros, cueA: 'Tronco inclinado, abre brazos como alas.', exB: 'Copa de Tríceps a 2 Manos', mediaB: EXERCISE_MEDIA.copa_triceps, cueB: 'Codos cerrados apuntando hacia el techo.' },
-          { type: 'cardio', name: 'Cardio Bloque 5' },
-          { type: 'fuerza', name: 'Fuerza 5', exA: 'Plancha Abdominal', mediaA: EXERCISE_MEDIA.plancha, cueA: 'Activa glúteos y hombros en empuje.', exB: 'Flexiones en Suelo', mediaB: EXERCISE_MEDIA.flexiones, cueB: 'Pecho a un palmo del suelo en cada repetición.' },
+          { type: 'cardio', name: 'Cardio Bloque 1', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 1', exA: 'Remo con Mancuernas', iconA: 'row', cueA: 'Tira con los codos hacia atrás.', exB: 'Fondos en Colchoneta/Banco', iconB: 'push', cueB: 'Flexiona codos a 90 grados y empuja.' },
+          { type: 'cardio', name: 'Cardio Bloque 2', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 2', exA: 'Floor Press Mancuernas', iconA: 'push', cueA: 'Toca suelo con tríceps y empuja arriba.', exB: 'Press Militar Mancuerna', iconB: 'warmup', cueB: 'Empuje vertical sin arquear espalda.' },
+          { type: 'cardio', name: 'Cardio Bloque 3', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Elevaciones Laterales', iconA: 'warmup', cueA: 'Sube hasta la altura de los hombros.', exB: 'Patada de Tríceps Mancuerna', iconB: 'row', cueB: 'Extiende el codo por completo hacia atrás.' },
+          { type: 'cardio', name: 'Cardio Bloque 4', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Pájaros (Deltoides Post)', iconA: 'row', cueA: 'Torso inclinado, abre brazos hacia los lados.', exB: 'Copa de Tríceps a 2 Manos', iconB: 'warmup', cueB: 'Codos cerrados apuntando hacia arriba.' },
+          { type: 'cardio', name: 'Cardio Bloque 5', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 5', exA: 'Plancha Abdominal', iconA: 'push', cueA: 'Contrae abdomen y glúteos firmemente.', exB: 'Flexiones en Suelo', iconB: 'push', cueB: 'Pecho cerca del suelo en cada bajada.' },
         ]
       },
       jueves: {
         name: "Jueves: Glúteos",
         blocks: [
-          { type: 'cardio', name: 'Cardio Bloque 1' },
-          { type: 'fuerza', name: 'Fuerza 1', exA: 'Hip Thrust Colchoneta', mediaA: EXERCISE_MEDIA.hip_thrust, cueA: 'Mirada al frente y máxima contracción de glúteos.', exB: 'Clamshell con Banda', mediaB: EXERCISE_MEDIA.clamshell, cueB: 'Abre la rodilla superior sin rotar la cadera.' },
-          { type: 'cardio', name: 'Cardio Bloque 2' },
-          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', mediaA: EXERCISE_MEDIA.peso_muerto_rumano, cueA: 'Enfoca la fuerza empujando el suelo con talones.', exB: 'Patada Glúteo Cuadrupedia', mediaB: EXERCISE_MEDIA.patada_gluteo, cueB: 'Sube la pierna flexionada a 90° sin doblar la espalda.' },
-          { type: 'cardio', name: 'Cardio Bloque 3' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Puente a 1 Pierna Izq', mediaA: EXERCISE_MEDIA.puente_activacion, cueA: 'Empuja solo con la pierna izquierda.', exB: 'Puente a 1 Pierna Der', mediaB: EXERCISE_MEDIA.puente_activacion, cueB: 'Empuja solo con la pierna derecha.' },
-          { type: 'cardio', name: 'Cardio Bloque 4' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Frog Pumps Mancuerna', mediaA: EXERCISE_MEDIA.frog_pumps, cueA: 'Plantas de los pies juntas, eleva y aprieta.', exB: 'Abducciones con Banda Sentado', mediaB: EXERCISE_MEDIA.abduccion_banda, cueB: 'Aperturas dinámicas manteniendo tensión.' },
-          { type: 'cardio', name: 'Cardio Bloque 5' },
-          { type: 'fuerza', name: 'Fuerza 5', exA: 'Búlgara Foco Glúteo', mediaA: EXERCISE_MEDIA.zancada_bulgara, cueA: 'Inclina el torso ligeramente hacia adelante.', exB: 'Caminata Lateral con Banda', mediaB: EXERCISE_MEDIA.caminata_lateral, cueB: 'Pasos cortos y controlados manteniendo tensión.' },
+          { type: 'cardio', name: 'Cardio Bloque 1', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 1', exA: 'Hip Thrust Colchoneta', iconA: 'bridge', cueA: 'Aprieta glúteos fuertemente al subir.', exB: 'Clamshell con Banda', iconB: 'bridge', cueB: 'Abre la rodilla superior sin rotar tronco.' },
+          { type: 'cardio', name: 'Cardio Bloque 2', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', iconA: 'deadlift', cueA: 'Empuja glúteos atrás sintiendo el estiramiento.', exB: 'Patada Glúteo Cuadrupedia', iconB: 'bridge', cueB: 'Eleva la planta del pie hacia el techo.' },
+          { type: 'cardio', name: 'Cardio Bloque 3', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Puente a 1 Pierna Izq', iconA: 'bridge', cueA: 'Empuja solo con el talón izquierdo.', exB: 'Puente a 1 Pierna Der', iconB: 'bridge', cueB: 'Empuja solo con el talón derecho.' },
+          { type: 'cardio', name: 'Cardio Bloque 4', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Frog Pumps Mancuerna', iconA: 'bridge', cueA: 'Plantas juntas, sube cadera y aprieta.', exB: 'Abducciones con Banda Sentado', iconB: 'bridge', cueB: 'Abre rodillas con fuerza continua.' },
+          { type: 'cardio', name: 'Cardio Bloque 5', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 5', exA: 'Búlgara Foco Glúteo', iconA: 'squat', cueA: 'Torso ligeramente inclinado al bajar.', exB: 'Caminata Lateral con Banda', iconB: 'squat', cueB: 'Tensión constante en la banda elástica.' },
         ]
       },
       viernes: {
         name: "Viernes: Full Body (Énf. Inferior)",
         blocks: [
-          { type: 'cardio', name: 'Cardio Bloque 1' },
-          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', mediaA: EXERCISE_MEDIA.sentadilla_goblet, cueA: 'Sentadilla profunda y controlada.', exB: 'Remo con Mancuernas', mediaB: EXERCISE_MEDIA.remo_mancuernas, cueB: 'Retracción escapular completa.' },
-          { type: 'cardio', name: 'Cardio Bloque 2' },
-          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', mediaA: EXERCISE_MEDIA.peso_muerto_rumano, cueA: 'Espalda recta, baja hasta media espinilla.', exB: 'Floor Press Mancuernas', mediaB: EXERCISE_MEDIA.floor_press, cueB: 'Empuje de pecho desde el suelo.' },
-          { type: 'cardio', name: 'Cardio Bloque 3' },
-          { type: 'fuerza', name: 'Fuerza 3', exA: 'Step-ups / Subidas', mediaA: EXERCISE_MEDIA.step_ups, cueA: 'Empuja con el talón de la pierna que sube.', exB: 'Elevaciones Laterales', mediaB: EXERCISE_MEDIA.elevaciones_laterales, cueB: 'Codos ligeramente flexionados.' },
-          { type: 'cardio', name: 'Cardio Bloque 4' },
-          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo Banda', mediaA: EXERCISE_MEDIA.puente_gluteo_banda, cueA: 'Máxima tensión en el glúteo arriba.', exB: 'Curl Bíceps Mancuerna', mediaB: EXERCISE_MEDIA.curl_biceps, cueB: 'Subida explosiva, bajada en 2 segundos.' },
-          { type: 'cardio', name: 'Cardio Bloque 5' },
-          { type: 'fuerza', name: 'Fuerza 5', exA: 'Zancadas Hacia Atrás', mediaA: EXERCISE_MEDIA.zancadas_alternas, cueA: 'Paso largo hacia atrás amortiguando la bajada.', exB: 'Plancha Abdominal', mediaB: EXERCISE_MEDIA.plancha, cueB: 'Abdomen y glúteos firmes en todo momento.' },
+          { type: 'cardio', name: 'Cardio Bloque 1', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 1', exA: 'Sentadilla Goblet', iconA: 'squat', cueA: 'Sentadilla profunda y controlada.', exB: 'Remo con Mancuernas', iconB: 'row', cueB: 'Junta escápulas en la parte alta.' },
+          { type: 'cardio', name: 'Cardio Bloque 2', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 2', exA: 'Peso Muerto Rumano', iconA: 'deadlift', cueA: 'Baja las mancuernas rozando las piernas.', exB: 'Floor Press Mancuernas', iconB: 'push', cueB: 'Empuje de pecho desde colchoneta.' },
+          { type: 'cardio', name: 'Cardio Bloque 3', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 3', exA: 'Step-ups / Subidas', iconA: 'squat', cueA: 'Empuja con la pierna de arriba.', exB: 'Elevaciones Laterales', iconB: 'warmup', cueB: 'Controla la bajada en 2 segundos.' },
+          { type: 'cardio', name: 'Cardio Bloque 4', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 4', exA: 'Puente Glúteo Banda', iconA: 'bridge', cueA: 'Abre rodillas al subir.', exB: 'Curl Bíceps Mancuerna', iconB: 'row', cueB: 'Contracción estricta sin balanceo.' },
+          { type: 'cardio', name: 'Cardio Bloque 5', icon: 'cardio' },
+          { type: 'fuerza', name: 'Fuerza 5', exA: 'Zancadas Hacia Atrás', iconA: 'squat', cueA: 'Paso atrás controlado.', exB: 'Plancha Abdominal', iconB: 'push', cueB: 'Glúteos y core bloqueados.' },
         ]
       }
     };
@@ -232,52 +311,4 @@
       );
     }
 
-    function HomeView({ selectedDay, setSelectedDay, cardioMachine, setCardioMachine, onStartWorkout, onGoMetrics }) {
-      const days = [
-        { key: 'lunes', label: 'Lunes', desc: 'Full body' },
-        { key: 'martes', label: 'Martes', desc: 'Piernas' },
-        { key: 'miercoles', label: 'Miércoles', desc: 'Espalda + Hombros + Tríceps' },
-        { key: 'jueves', label: 'Jueves', desc: 'Glúteos' },
-        { key: 'viernes', label: 'Viernes', desc: 'Full body (Enf. Inferior)' }
-      ];
-
-      const machines = ['Caminadora', 'Bicicleta elíptica', 'Bicicleta estática'];
-
-      return (
-        <div className="flex flex-col space-y-5 pt-2">
-          <div>
-            <h1 className="text-2xl font-black text-white tracking-tight">MI ENTRENAMIENTO</h1>
-            <p className="text-slate-400 text-xs">5 min calentamiento + 10 bloques (Cardio y Fuerza)</p>
-          </div>
-
-          <div className="space-y-2">
-            <span className="text-[11px] uppercase font-bold text-slate-400 tracking-wider">Día</span>
-            <div className="grid grid-cols-1 gap-2">
-              {days.map(d => (
-                <button
-                  key={d.key}
-                  onClick={() => setSelectedDay(d.key)}
-                  className={`p-3 rounded-xl border text-left flex justify-between items-center transition ${
-                    selectedDay === d.key 
-                      ? 'bg-blue-600/20 border-blue-500 text-blue-200' 
-                      : 'bg-slate-900 border-slate-800 text-slate-300'
-                  }`}
-                >
-                  <div>
-                    <div className="font-bold text-sm">{d.label}</div>
-                    <div className="text-[11px] opacity-70">{d.desc}</div>
-                  </div>
-                  {selectedDay === d.key && <span className="text-blue-400 font-bold">✓</span>}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <span className="text-[11px] uppercase font-bold text-slate-400 tracking-wider">Máquina de Cardio</span>
-            <div className="grid grid-cols-3 gap-2">
-              {machines.map(m => (
-                <button
-                  key={m}
-                  onClick={() => setCardioMachine(m)}
-                  className={`p-2.5 rounded-xl bord
+    function HomeView({ selectedDay, setSelectedDay, cardioMachine, s
