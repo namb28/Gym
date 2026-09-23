@@ -36,7 +36,10 @@
         const gain = ctx.createGain();
         osc.type = type;
         osc.frequency.setValueAtTime(freq, ctx.currentTime);
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        
+        // ¡VOLUMEN AL MÁXIMO! (Cambiado de 0.2 a 1.0)
+        gain.gain.setValueAtTime(1.0, ctx.currentTime); 
+        
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -154,16 +157,16 @@
         ]
       },
       viernes: {
-        name: "Viernes: Full Body (Énf. Inferior)",
+        name: "Viernes: Tren Inferior + Abdomen",
         blocks: [
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Mancuerna al pecho.', exB: 'Remo Inclinado', cueB: 'Junta escápulas.' },
+          { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Mancuerna al pecho.', exB: 'Plancha Abdominal', cueB: 'Activa el core, cuerpo recto.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Rozando las piernas.', exB: 'Press de Pecho (Suelo)', cueB: 'Empuje hacia arriba.' },
+          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Rozando las piernas.', exB: 'Elevación de Piernas', cueB: 'Boca arriba, piernas rectas.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Zancada Atrás', cueA: 'Paso largo.', exB: 'Press Militar', cueB: 'De pie, empuja arriba.' },
+          { type: 'fuerza', exA: 'Zancada Atrás', cueA: 'Paso largo.', exB: 'Twist Ruso', cueB: 'Sentada, gira el torso.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Hip Thrust', cueA: 'Espalda en banco.', exB: 'Elevación Pantorrillas', cueB: 'Sube a las puntas.' },
+          { type: 'fuerza', exA: 'Hip Thrust', cueA: 'Espalda en banco.', exB: 'Crunch Abdominal', cueB: 'Manos a la nuca, contrae.' },
           { type: 'cardio' },
           { type: 'fuerza', exA: 'Sentadilla Sumo', cueA: 'Pies abiertos.', exB: 'Bicho Muerto (Dead Bug)', cueB: 'Abdomen bloqueado.' },
         ]
@@ -242,7 +245,7 @@
         { key: 'martes', label: 'Martes', desc: 'Piernas' },
         { key: 'miercoles', label: 'Miércoles', desc: 'Espalda, Hombros y Tríceps' },
         { key: 'jueves', label: 'Jueves', desc: 'Glúteos' },
-        { key: 'viernes', label: 'Viernes', desc: 'Full body (Énf. Inferior)' }
+        { key: 'viernes', label: 'Viernes', desc: 'Tren Inferior + Abdomen' }
       ];
       const machines = ['Caminadora', 'Bicicleta elíptica', 'Bicicleta estática'];
 
