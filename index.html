@@ -27,20 +27,21 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    const playBeep = (freq = 440, type = 'sine', duration = 0.15) => {
+    // SISTEMA DE AUDIO POTENCIADO
+    const playBeep = (freq = 440, type = 'square', duration = 0.2, vol = 1.0) => {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (!AudioCtx) return;
         const ctx = new AudioCtx();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = type;
+        osc.type = type; // 'square' y 'sawtooth' son mucho más fuertes que 'sine'
         osc.frequency.setValueAtTime(freq, ctx.currentTime);
         
-        // ¡VOLUMEN AL MÁXIMO! (Cambiado de 0.2 a 1.0)
-        gain.gain.setValueAtTime(1.0, ctx.currentTime); 
-        
+        // Volumen al máximo permitido sin distorsionar el altavoz
+        gain.gain.setValueAtTime(vol, ctx.currentTime); 
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start();
@@ -102,9 +103,10 @@
           { type: 'cardio' },
           { type: 'fuerza', exA: 'Sentadilla Goblet', cueA: 'Mancuerna vertical, baja.', exB: 'Press de Pecho (Suelo)', cueB: 'Empuja hacia arriba.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Peso Muerto Rumano', cueA: 'Mancuernas rozan piernas.', exB: 'Press Militar', cueB: 'Empuja vertical de pie.' },
+          // ¡AQUÍ CORREGÍ EL LUNES PARA QUE COINCIDA CON TUS IMÁGENES!
+          { type: 'fuerza', exA: 'Remo Inclinado', cueA: 'Espalda recta, tira a la cintura.', exB: 'Peso Muerto Rumano', cueB: 'Mancuernas rozan piernas.' },
           { type: 'cardio' },
-          { type: 'fuerza', exA: 'Zancada Atrás', cueA: 'Paso largo, control.', exB: 'Remo Inclinado', cueB: 'Tira a la cintura.' },
+          { type: 'fuerza', exA: 'Press de Hombros', cueA: 'Empuja vertical de pie.', exB: 'Zancada Atrás', cueB: 'Paso largo, control.' },
           { type: 'cardio' },
           { type: 'fuerza', exA: 'Hip Thrust', cueA: 'Apoya espalda en banco.', exB: 'Remo Sentado Banda', cueB: 'Tira hacia el abdomen.' },
           { type: 'cardio' },
@@ -354,8 +356,17 @@
           t = setInterval(() => {
             setTotalSecs(s => s + 1);
             setTimeLeft(prev => {
-              if (prev <= 4 && prev > 1) playBeep(440, 'sine', 0.1); 
-              if (prev === 1) { playBeep(880, 'triangle', 0.35); nextStep(); return 0; }
+              // SECCIÓN DEL CRONÓMETRO Y AUDIO ACTUALIZADA
+              if (prev <= 4 && prev > 1) {
+                // Beep de cuenta regresiva (onda cuadrada, sonido fuerte)
+                playBeep(600, 'square', 0.15, 1.0); 
+              }
+              if (prev === 1) { 
+                // Beep final fuerte (onda sierra, sonido más agudo y duradero)
+                playBeep(900, 'sawtooth', 0.6, 1.0); 
+                nextStep(); 
+                return 0; 
+              }
               return prev - 1;
             });
           }, 1000);
